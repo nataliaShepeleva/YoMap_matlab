@@ -1,13 +1,15 @@
 %% name file
 openstreetmap_filename = 'data/LeCreusotWaysFF.osm'; %'osm file with data';
 parsed_osm_filename = 'data/LeCreusotWaysFF.mat'; %'osm file with data';
+poi_filename = 'data/LeCreusot_POI.xml'; %'osm file with data';
+parsed_poi_filename = 'data/LeCreusot_POI.mat'; %'osm file with data';
 map_img_filename = 'data/map20000.png'; % image file saved from online, if available
 
 
 %% convert XML -> MATLAB struct 
 %read and save to parsed_osm_filename
 [parsed_osm, osm_xml] = parse_openstreetmap(openstreetmap_filename,parsed_osm_filename,2);
-
+[parsed_poi] = parse_poi_xml(poi_filename,parsed_poi_filename,1);
 %% plot
 %global figure
 fig = figure;
