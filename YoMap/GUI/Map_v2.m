@@ -106,6 +106,8 @@ global hshowMap;
 global hshowWay;
 global hshowRoute;
 global points;
+global openstreetmap_filename;
+global map_img_filename;
  
 valueA = '';
 valueB = '';
@@ -157,13 +159,14 @@ poi4{6} = 'cat 4 poi 5';
 h = gca;
 route = 0;
 openstreetmap_filename = 'LeCreusotWaysFF.osm';%'genoa.osm';
+parsed_osm_filename = 'data/LeCreusotWaysFF.mat'; %'osm file with data';
 map_img_filename = 'map40000.png'; % image file saved from online, if available
 
-[parsed_osm, osm_xml] = parse_openstreetmap(openstreetmap_filename,'',2);
+[parsed_osm, osm_xml] = parse_openstreetmap(openstreetmap_filename,parsed_osm_filename ,2);
 %hshowMap = show_map(h, bounds, map_img_filename);
 %plot_way(h, parsed_osm, map_img_filename);
 %set(handles.showMapBtn, 'Value', 1);
-show_Map_Result(h, 1, 0, 0, 0, 0, parsed_osm);
+show_Map_Result(h, 1, 0, 0, 0, 0, parsed_osm, openstreetmap_filename, map_img_filename);
 set(handles.showMapBtn, 'Value', 1);
 
 
@@ -441,6 +444,8 @@ global yB;
 global parsed_osm; 
 global route;
 global points;
+global openstreetmap_filename;
+global map_img_filename;
 
 route = 0;
 %enC = get(handles.panelC, 'Visible');
@@ -520,7 +525,7 @@ if enRadSrch == 0
                 if size(route,2) < 2
                 	warn(6); 
                 else
-                    show_Map_Result(h, btnMap, btnRoads, btnWay, route, points, parsed_osm); 
+                    show_Map_Result(h, btnMap, btnRoads, btnWay, route, points, parsed_osm, openstreetmap_filename, map_img_filename); 
                 end
                 
                 %stringOut = searchAB(xA, yA, xB, yB, transport);
@@ -638,10 +643,12 @@ global h;
 global parsed_osm;
 global route;
 global points;
+global openstreetmap_filename;
+global map_img_filename;
 btnMap = get(handles.showMapBtn, 'Value');
 btnRoads = get(handles.showRoadsBtn, 'Value');
 btnWay = get(handles.showWayBtn, 'Value');
-show_Map_Result(h, btnMap, btnRoads, btnWay, route,  points, parsed_osm);
+show_Map_Result(h, btnMap, btnRoads, btnWay, route,  points, parsed_osm, openstreetmap_filename, map_img_filename);
 
 
 
@@ -656,10 +663,12 @@ global h;
 global parsed_osm;
 global route; 
 global points;
+global openstreetmap_filename;
+global map_img_filename
 btnMap = get(handles.showMapBtn, 'Value');
 btnRoads = get(handles.showRoadsBtn, 'Value');
 btnWay = get(handles.showWayBtn, 'Value');
-show_Map_Result(h, btnMap, btnRoads, btnWay, route,  points, parsed_osm);
+show_Map_Result(h, btnMap, btnRoads, btnWay, route,  points, parsed_osm, openstreetmap_filename, map_img_filename);
 
 % --- Executes on button press in showRoadsBtn.
 function showRoadsBtn_Callback(hObject, eventdata, handles)
@@ -672,10 +681,12 @@ global h;
 global parsed_osm;
 global route;
 global points;
+global openstreetmap_filename;
+global map_img_filename;
 btnMap = get(handles.showMapBtn, 'Value');
 btnRoads = get(handles.showRoadsBtn, 'Value');
 btnWay = get(handles.showWayBtn, 'Value');
-show_Map_Result(h, btnMap, btnRoads, btnWay, route,  points, parsed_osm);
+show_Map_Result(h, btnMap, btnRoads, btnWay, route,  points, parsed_osm, openstreetmap_filename, map_img_filename);
 
 
 % --- Executes on button press in layer4.

@@ -1,7 +1,5 @@
-function show_Map_Result(ax,map, road, way, route, points, parsed_osm)
+function show_Map_Result(ax,map, road, way, route, points, parsed_osm, openstreetmap_filename, map_img_filename)
 
-openstreetmap_filename = 'LeCreusotWaysFF.osm';%'genoa.osm';
-map_img_filename = 'map43000.png'; % image file saved from online, if available
 cla reset;
 
 flag = 0;
