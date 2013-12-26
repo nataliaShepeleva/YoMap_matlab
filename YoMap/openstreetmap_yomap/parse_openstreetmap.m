@@ -43,13 +43,13 @@ function [parsed_osm, osm_xml] = parse_openstreetmap(openstreetmap_filename,pars
 %==anyother - read osmfile and parse
 if fromMat==2
     osm_xml=0;
-    load parsed_osm_filename parsed_osm;
+    load(parsed_osm_filename,'parsed_osm');
 else    
     map_osm = load_osm_xml(openstreetmap_filename);
     osm_xml = map_osm.osm;
     parsed_osm = parse_osm_modified(osm_xml);
     if fromMat==1
-        save parsed_osm_filename parsed_osm
+        save(parsed_osm_filename,'parsed_osm');
     end    
 end
 
