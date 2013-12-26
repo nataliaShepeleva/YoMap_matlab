@@ -1582,8 +1582,15 @@ x = num2str(xA);
 y = num2str(yA);
 set(handles.coordXA, 'String', x);
 set(handles.coordYA, 'String', y);
-set(handles.drawBtnA, 'Value',1, 'Callback', @drawBtnA);
-
+if get(handles.drawBtnA, 'Value') == 1
+    set(handles.drawBtnA, 'Value',0);
+    drawBtnA_Callback(hObject, eventdata, handles);
+    set(handles.drawBtnA, 'Value',1);
+    drawBtnA_Callback(hObject, eventdata, handles);
+else
+    set(handles.drawBtnA, 'Value',1);
+    drawBtnA_Callback(hObject, eventdata, handles);
+end
 
 % --- Executes on button press in drawBtnA.
 function drawBtnA_Callback(hObject, eventdata, handles)
@@ -2289,6 +2296,15 @@ x = num2str(xB);
 y = num2str(yB);
 set(handles.coordXB, 'String', x);
 set(handles.coordYB, 'String', y);
+if get(handles.drawBtnB, 'Value') == 1
+    set(handles.drawBtnB, 'Value',0);
+    drawBtnB_Callback(hObject, eventdata, handles);
+    set(handles.drawBtnB, 'Value',1);
+    drawBtnB_Callback(hObject, eventdata, handles);
+else
+    set(handles.drawBtnB, 'Value',1);
+    drawBtnB_Callback(hObject, eventdata, handles);
+end
 
 
 % --- Executes on button press in listBtnB.
