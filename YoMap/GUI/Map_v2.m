@@ -298,7 +298,7 @@ if get(handles.carBtn, 'Value')
     set(handles.footBtn, 'Value', 0);
     set(handles.bikeBtn, 'Value', 0);
     set(handles.busBtn, 'Value', 0);
-    transport = 2;
+    transport = 1;
 end
 
 
@@ -314,7 +314,7 @@ if get(handles.footBtn, 'Value')
     set(handles.carBtn, 'Value', 0);
     set(handles.bikeBtn, 'Value', 0);
     set(handles.busBtn, 'Value', 0);
-    transport = 1;
+    transport = 2;
 end
 
 
@@ -1571,6 +1571,7 @@ x = num2str(xA);
 y = num2str(yA);
 set(handles.coordXA, 'String', x);
 set(handles.coordYA, 'String', y);
+set(handles.drawBtnA, 'Value',1, 'Callback', @drawBtnA);
 
 
 % --- Executes on button press in drawBtnA.
