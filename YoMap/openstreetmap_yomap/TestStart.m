@@ -25,6 +25,6 @@ plot_way(ax, parsed_osm)
 points = [x(2) x(1); y(2) y(1)]
 
 %% plot routelayer
-route = findShortestWayByPosition(parsed_osm,x(1),y(1),x(2),y(2),1);
+route = findShortestWayByPosition(parsed_osm,x(1),y(1),x(2),y(2),2);
 plot_optimal_route(ax, route, points, parsed_osm);
 

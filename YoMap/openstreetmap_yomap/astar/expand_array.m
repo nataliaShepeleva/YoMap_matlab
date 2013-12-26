@@ -13,7 +13,7 @@ function exp_array=expand_array(parsed_osm,mode,currentNode,hn,targetNode,CLOSED
     Nconnections = size(cur_outgoing_conn,2);
     for k= 1:Nconnections
         segment_id = cur_outgoing_conn(k);
-        if parsed_osm.segments.access(segment_id)==0 && (mode == 0 | ((mode==1 && parsed_osm.segments.roadtype(segment_id)<9) || (mode==2 && parsed_osm.segments.roadtype(segment_id<11))))
+        if parsed_osm.segments.access(segment_id)==0 && (mode == 0 || ((mode==1 && parsed_osm.segments.roadtype(segment_id)<9) || (mode==2 && parsed_osm.segments.roadtype(segment_id<11))))
            %if access is any AND mode is car and road is caravaliable or
            %mode is foot and road is also foot avaliable
            id_nodeB = parsed_osm.segments.end_pos(segment_id);
