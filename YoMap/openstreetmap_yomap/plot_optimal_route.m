@@ -43,42 +43,44 @@ start_xy = route(:, 1); %real end point
 path_xy = route(:,:);
 path_end = route(:,end);%real start point
 
-held = takehold(ax);
+if size(route,2) >= 2
 
-if end_point == start_xy
-    if start_point == path_end
-        plotmd(ax, path_xy, 'Color', 'r', 'LineStyle', '--', 'LineWidth', 5) 
-        plotmd(ax, start_point, 'o','MarkerEdgeColor','k','MarkerFaceColor','r', 'MarkerSize',10);
-        plotmd(ax, end_point, 'o','MarkerEdgeColor','k','MarkerFaceColor','g', 'MarkerSize',10);
-    else
-        plot(ax, [points(1,1) route(1,1)], [points(2,1) route(2,1)], 'b', 'LineWidth', 5);
-        plotmd(ax, path_xy, 'Color', 'r', 'LineStyle', '--', 'LineWidth', 5)
-        plotmd(ax, end_point, 'o','MarkerEdgeColor','k','MarkerFaceColor','g', 'MarkerSize',10);
-        plotmd(ax, start_point, 'o','MarkerEdgeColor','k','MarkerFaceColor','r', 'MarkerSize',10);
-        plotmd(ax, path_end, 'Color', 'r', 'Marker', 'o', 'MarkerSize', 15)
+    held = takehold(ax);
+
+    if end_point == start_xy
+        if start_point == path_end
+            plotmd(ax, path_xy, 'Color', 'r', 'LineStyle', '--', 'LineWidth', 5) 
+            plotmd(ax, start_point, 'o','MarkerEdgeColor','k','MarkerFaceColor','r', 'MarkerSize',10);
+            plotmd(ax, end_point, 'o','MarkerEdgeColor','k','MarkerFaceColor','g', 'MarkerSize',10);
+        else
+            plot(ax, [points(1,1) route(1,1)], [points(2,1) route(2,1)], 'b', 'LineWidth', 5);
+            plotmd(ax, path_xy, 'Color', 'r', 'LineStyle', '--', 'LineWidth', 5)
+            plotmd(ax, end_point, 'o','MarkerEdgeColor','k','MarkerFaceColor','g', 'MarkerSize',10);
+            plotmd(ax, start_point, 'o','MarkerEdgeColor','k','MarkerFaceColor','r', 'MarkerSize',10);
+            plotmd(ax, path_end, 'Color', 'r', 'Marker', 'o', 'MarkerSize', 15)
+        end
+    else if start_point == path_end
+            plot(ax, [points(1,v) route(1,end)], [points(2,end) route(2,end)], 'b', 'LineWidth', 5);
+            plotmd(ax, path_xy, 'Color', 'r', 'LineStyle', '--', 'LineWidth', 5) 
+            plotmd(ax, start_point, 'o','MarkerEdgeColor','k','MarkerFaceColor','r', 'MarkerSize',10);
+            plotmd(ax, end_point, 'o','MarkerEdgeColor','k','MarkerFaceColor','g', 'MarkerSize',10);
+            plotmd(ax, start_xy, 'Color', 'g', 'Marker', 'o', 'MarkerSize', 15)
+        else
+            plot(ax, [points(1,1) route(1,1)], [points(2,1) route(2,1)], 'b', 'LineWidth', 5);
+            plot(ax, [points(1,end) route(1,end)], [points(2,end) route(2,end)], 'b', 'LineWidth', 5);
+            plotmd(ax, path_xy, 'Color', 'r', 'LineStyle', '--', 'LineWidth', 5)
+            plotmd(ax, start_point, 'o','MarkerEdgeColor','k','MarkerFaceColor','r', 'MarkerSize',10);
+            plotmd(ax, end_point, 'o','MarkerEdgeColor','k','MarkerFaceColor','g', 'MarkerSize',10);
+            plotmd(ax, start_xy, 'Color', 'g', 'Marker', 'o', 'MarkerSize', 15)
+            plotmd(ax, path_end, 'Color', 'r', 'Marker', 'o', 'MarkerSize', 15)
+
+        end   
     end
-else if start_point == path_end
-        plot(ax, [points(1,v) route(1,end)], [points(2,end) route(2,end)], 'b', 'LineWidth', 5);
-        plotmd(ax, path_xy, 'Color', 'r', 'LineStyle', '--', 'LineWidth', 5) 
-        plotmd(ax, start_point, 'o','MarkerEdgeColor','k','MarkerFaceColor','r', 'MarkerSize',10);
-        plotmd(ax, end_point, 'o','MarkerEdgeColor','k','MarkerFaceColor','g', 'MarkerSize',10);
-        plotmd(ax, start_xy, 'Color', 'g', 'Marker', 'o', 'MarkerSize', 15)
-    else
-        plot(ax, [points(1,1) route(1,1)], [points(2,1) route(2,1)], 'b', 'LineWidth', 5);
-        plot(ax, [points(1,end) route(1,end)], [points(2,end) route(2,end)], 'b', 'LineWidth', 5);
-        plotmd(ax, path_xy, 'Color', 'r', 'LineStyle', '--', 'LineWidth', 5)
-        plotmd(ax, start_point, 'o','MarkerEdgeColor','k','MarkerFaceColor','r', 'MarkerSize',10);
-        plotmd(ax, end_point, 'o','MarkerEdgeColor','k','MarkerFaceColor','g', 'MarkerSize',10);
-        plotmd(ax, start_xy, 'Color', 'g', 'Marker', 'o', 'MarkerSize', 15)
-        plotmd(ax, path_end, 'Color', 'r', 'Marker', 'o', 'MarkerSize', 15)
-        
-    end   
-end
-
-
 % plotmd(ax, start_xy, 'Color', 'r', 'Marker', 'o', 'MarkerSize', 15)
 % plotmd(ax, path_xy, 'Color', 'r', 'LineStyle', '--', 'LineWidth', 5)
 % plotmd(ax, path_end, 'Color', 'g', 'Marker', 'o', 'MarkerSize', 15)
 
 
 givehold(ax, held)
+
+end

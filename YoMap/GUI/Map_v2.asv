@@ -518,9 +518,9 @@ if enRadSrch == 0
                 route = findShortestWayByPosition(parsed_osm, xA, yA, xB, yB, transport);
                 points = [xB xA; yB yA];
                 if size(route,2) < 2
-                	warn(6); 
+                	warn() 
                 else
-                    show_Map_Result(h, btnMap, btnRoads, btnWay, route, points, parsed_osm); 
+                                    show_Map_Result(h, btnMap, btnRoads, btnWay, route, points, parsed_osm); 
                 end
                 
                 %stringOut = searchAB(xA, yA, xB, yB, transport);
