@@ -8,9 +8,9 @@ poi.id = parsed_poi.poi.id(1,pos(poi_id));
 poi.cat_id = parsed_poi.poi.cat_id(1,pos(poi_id));
 poi.xy = parsed_poi.poi.xy(:,pos(poi_id));
 poi.name = parsed_poi.poi.name{1,pos(poi_id)};
-poi.address = parsed_poi.poi.name{1,pos(poi_id)};
-poi.photo_path = parsed_poi.poi.name{1,pos(poi_id)};
-poi.user = parsed_poi.poi.name{1,pos(poi_id)};
+poi.address = parsed_poi.poi.address{1,pos(poi_id)};
+poi.photo_path = parsed_poi.poi.photo_path{1,pos(poi_id)};
+poi.user = parsed_poi.poi.user{1,pos(poi_id)};
 
 
 
