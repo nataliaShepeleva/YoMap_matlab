@@ -116,7 +116,7 @@ valueD = '';
 valueE = '';
 valueF = '';
 radius = '';
-transport = 0;
+transport = 2;
 
 hdotA = 0;
 hdotB = 0;
@@ -168,7 +168,7 @@ map_img_filename = 'map40000.png'; % image file saved from online, if available
 %set(handles.showMapBtn, 'Value', 1);
 show_Map_Result(h, 1, 0, 0, 0, 0, parsed_osm, openstreetmap_filename, map_img_filename);
 set(handles.showMapBtn, 'Value', 1);
-
+set(handles.footBtn, 'Value', 1);
 
 % UIWAIT makes Map_v2 wait for user response (see UIRESUME)
 % uiwait(handles.figure1);
@@ -464,6 +464,7 @@ enListB = get(handles.listBtnB, 'Value');
 enMapB = get(handles.mapBtnB, 'Value');
 btnMap = get(handles.showMapBtn, 'Value');
 btnRoads = get(handles.showRoadsBtn, 'Value');
+set(handles.showWayBtn, 'Value', 1);
 btnWay = get(handles.showWayBtn, 'Value');
 if enRadSrch == 0
     %any search
@@ -525,7 +526,36 @@ if enRadSrch == 0
                 if size(route,2) < 2
                 	warn(6); 
                 else
-                    show_Map_Result(h, btnMap, btnRoads, btnWay, route, points, parsed_osm, openstreetmap_filename, map_img_filename); 
+                    btA = get(handles.drawBtnA, 'Value');
+                    btB = get(handles.drawBtnB, 'Value');
+                    if btA == 1 & btB == 1
+                        set(handles.drawBtnA, 'Value',0);
+                        drawBtnA_Callback(hObject, eventdata, handles);
+                        set(handles.drawBtnB, 'Value',0);
+                        drawBtnB_Callback(hObject, eventdata, handles);
+                        show_Map_Result(h, btnMap, btnRoads, btnWay, route,  points, parsed_osm, openstreetmap_filename, map_img_filename);
+                        set(handles.drawBtnA, 'Value',1);
+                        drawBtnA_Callback(hObject, eventdata, handles);
+                        set(handles.drawBtnB, 'Value',1);
+                        drawBtnB_Callback(hObject, eventdata, handles);
+                    end
+                    if btA == 1 & btB == 0
+                        set(handles.drawBtnA, 'Value',0);
+                        drawBtnA_Callback(hObject, eventdata, handles);
+                        show_Map_Result(h, btnMap, btnRoads, btnWay, route,  points, parsed_osm, openstreetmap_filename, map_img_filename);
+                        set(handles.drawBtnA, 'Value',1);
+                        drawBtnA_Callback(hObject, eventdata, handles);
+                    end
+                    if btA == 0 & btB == 1
+                        set(handles.drawBtnB, 'Value',0);
+                        drawBtnB_Callback(hObject, eventdata, handles);
+                        show_Map_Result(h, btnMap, btnRoads, btnWay, route,  points, parsed_osm, openstreetmap_filename, map_img_filename);
+                        set(handles.drawBtnB, 'Value',1);
+                        drawBtnB_Callback(hObject, eventdata, handles);
+                    end
+                    if btA == 0 & btB == 0
+                        show_Map_Result(h, btnMap, btnRoads, btnWay, route,  points, parsed_osm, openstreetmap_filename, map_img_filename);
+                    end 
                 end
                 
                 %stringOut = searchAB(xA, yA, xB, yB, transport);
@@ -648,8 +678,36 @@ global map_img_filename;
 btnMap = get(handles.showMapBtn, 'Value');
 btnRoads = get(handles.showRoadsBtn, 'Value');
 btnWay = get(handles.showWayBtn, 'Value');
-show_Map_Result(h, btnMap, btnRoads, btnWay, route,  points, parsed_osm, openstreetmap_filename, map_img_filename);
-
+btA = get(handles.drawBtnA, 'Value');
+btB = get(handles.drawBtnB, 'Value');
+if btA == 1 & btB == 1
+    set(handles.drawBtnA, 'Value',0);
+    drawBtnA_Callback(hObject, eventdata, handles);
+    set(handles.drawBtnB, 'Value',0);
+    drawBtnB_Callback(hObject, eventdata, handles);
+    show_Map_Result(h, btnMap, btnRoads, btnWay, route,  points, parsed_osm, openstreetmap_filename, map_img_filename);
+    set(handles.drawBtnA, 'Value',1);
+    drawBtnA_Callback(hObject, eventdata, handles);
+    set(handles.drawBtnB, 'Value',1);
+    drawBtnB_Callback(hObject, eventdata, handles);
+end
+if btA == 1 & btB == 0
+    set(handles.drawBtnA, 'Value',0);
+    drawBtnA_Callback(hObject, eventdata, handles);
+    show_Map_Result(h, btnMap, btnRoads, btnWay, route,  points, parsed_osm, openstreetmap_filename, map_img_filename);
+    set(handles.drawBtnA, 'Value',1);
+    drawBtnA_Callback(hObject, eventdata, handles);
+end
+if btA == 0 & btB == 1
+    set(handles.drawBtnB, 'Value',0);
+    drawBtnB_Callback(hObject, eventdata, handles);
+    show_Map_Result(h, btnMap, btnRoads, btnWay, route,  points, parsed_osm, openstreetmap_filename, map_img_filename);
+    set(handles.drawBtnB, 'Value',1);
+    drawBtnB_Callback(hObject, eventdata, handles);
+end
+if btA == 0 & btB == 0
+    show_Map_Result(h, btnMap, btnRoads, btnWay, route,  points, parsed_osm, openstreetmap_filename, map_img_filename);
+end 
 
 
 % --- Executes on button press in showMapBtn.
@@ -668,7 +726,37 @@ global map_img_filename
 btnMap = get(handles.showMapBtn, 'Value');
 btnRoads = get(handles.showRoadsBtn, 'Value');
 btnWay = get(handles.showWayBtn, 'Value');
-show_Map_Result(h, btnMap, btnRoads, btnWay, route,  points, parsed_osm, openstreetmap_filename, map_img_filename);
+btA = get(handles.drawBtnA, 'Value');
+btB = get(handles.drawBtnB, 'Value');
+if btA == 1 & btB == 1
+    set(handles.drawBtnA, 'Value',0);
+    drawBtnA_Callback(hObject, eventdata, handles);
+    set(handles.drawBtnB, 'Value',0);
+    drawBtnB_Callback(hObject, eventdata, handles);
+    show_Map_Result(h, btnMap, btnRoads, btnWay, route,  points, parsed_osm, openstreetmap_filename, map_img_filename);
+    set(handles.drawBtnA, 'Value',1);
+    drawBtnA_Callback(hObject, eventdata, handles);
+    set(handles.drawBtnB, 'Value',1);
+    drawBtnB_Callback(hObject, eventdata, handles);
+end
+if btA == 1 & btB == 0
+    set(handles.drawBtnA, 'Value',0);
+    drawBtnA_Callback(hObject, eventdata, handles);
+    show_Map_Result(h, btnMap, btnRoads, btnWay, route,  points, parsed_osm, openstreetmap_filename, map_img_filename);
+    set(handles.drawBtnA, 'Value',1);
+    drawBtnA_Callback(hObject, eventdata, handles);
+end
+if btA == 0 & btB == 1
+    set(handles.drawBtnB, 'Value',0);
+    drawBtnB_Callback(hObject, eventdata, handles);
+    show_Map_Result(h, btnMap, btnRoads, btnWay, route,  points, parsed_osm, openstreetmap_filename, map_img_filename);
+    set(handles.drawBtnB, 'Value',1);
+    drawBtnB_Callback(hObject, eventdata, handles);
+end
+if btA == 0 & btB == 0
+    show_Map_Result(h, btnMap, btnRoads, btnWay, route,  points, parsed_osm, openstreetmap_filename, map_img_filename);
+end 
+
 
 % --- Executes on button press in showRoadsBtn.
 function showRoadsBtn_Callback(hObject, eventdata, handles)
@@ -686,7 +774,36 @@ global map_img_filename;
 btnMap = get(handles.showMapBtn, 'Value');
 btnRoads = get(handles.showRoadsBtn, 'Value');
 btnWay = get(handles.showWayBtn, 'Value');
-show_Map_Result(h, btnMap, btnRoads, btnWay, route,  points, parsed_osm, openstreetmap_filename, map_img_filename);
+btA = get(handles.drawBtnA, 'Value');
+btB = get(handles.drawBtnB, 'Value');
+if btA == 1 & btB == 1
+    set(handles.drawBtnA, 'Value',0);
+    drawBtnA_Callback(hObject, eventdata, handles);
+    set(handles.drawBtnB, 'Value',0);
+    drawBtnB_Callback(hObject, eventdata, handles);
+    show_Map_Result(h, btnMap, btnRoads, btnWay, route,  points, parsed_osm, openstreetmap_filename, map_img_filename);
+    set(handles.drawBtnA, 'Value',1);
+    drawBtnA_Callback(hObject, eventdata, handles);
+    set(handles.drawBtnB, 'Value',1);
+    drawBtnB_Callback(hObject, eventdata, handles);
+end
+if btA == 1 & btB == 0
+    set(handles.drawBtnA, 'Value',0);
+    drawBtnA_Callback(hObject, eventdata, handles);
+    show_Map_Result(h, btnMap, btnRoads, btnWay, route,  points, parsed_osm, openstreetmap_filename, map_img_filename);
+    set(handles.drawBtnA, 'Value',1);
+    drawBtnA_Callback(hObject, eventdata, handles);
+end
+if btA == 0 & btB == 1
+    set(handles.drawBtnB, 'Value',0);
+    drawBtnB_Callback(hObject, eventdata, handles);
+    show_Map_Result(h, btnMap, btnRoads, btnWay, route,  points, parsed_osm, openstreetmap_filename, map_img_filename);
+    set(handles.drawBtnB, 'Value',1);
+    drawBtnB_Callback(hObject, eventdata, handles);
+end
+if btA == 0 & btB == 0
+    show_Map_Result(h, btnMap, btnRoads, btnWay, route,  points, parsed_osm, openstreetmap_filename, map_img_filename);
+end 
 
 
 % --- Executes on button press in layer4.
@@ -1582,8 +1699,15 @@ x = num2str(xA);
 y = num2str(yA);
 set(handles.coordXA, 'String', x);
 set(handles.coordYA, 'String', y);
-set(handles.drawBtnA, 'Value',1, 'Callback', @drawBtnA);
-
+if get(handles.drawBtnA, 'Value') == 1
+    set(handles.drawBtnA, 'Value',0);
+    drawBtnA_Callback(hObject, eventdata, handles);
+    set(handles.drawBtnA, 'Value',1);
+    drawBtnA_Callback(hObject, eventdata, handles);
+else
+    set(handles.drawBtnA, 'Value',1);
+    drawBtnA_Callback(hObject, eventdata, handles);
+end
 
 % --- Executes on button press in drawBtnA.
 function drawBtnA_Callback(hObject, eventdata, handles)
@@ -2289,6 +2413,15 @@ x = num2str(xB);
 y = num2str(yB);
 set(handles.coordXB, 'String', x);
 set(handles.coordYB, 'String', y);
+if get(handles.drawBtnB, 'Value') == 1
+    set(handles.drawBtnB, 'Value',0);
+    drawBtnB_Callback(hObject, eventdata, handles);
+    set(handles.drawBtnB, 'Value',1);
+    drawBtnB_Callback(hObject, eventdata, handles);
+else
+    set(handles.drawBtnB, 'Value',1);
+    drawBtnB_Callback(hObject, eventdata, handles);
+end
 
 
 % --- Executes on button press in listBtnB.
