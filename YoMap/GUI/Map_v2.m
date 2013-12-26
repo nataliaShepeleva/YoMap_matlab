@@ -108,6 +108,7 @@ global hshowRoute;
 global points;
 global openstreetmap_filename;
 global map_img_filename;
+global parsed_poi;
  
 valueA = '';
 valueB = '';
@@ -122,47 +123,19 @@ hdotA = 0;
 hdotB = 0;
 points = 0;
 
-cat{1} = 'choose category';
-cat{2} = 'cat 1';
-cat{3} = 'cat 2';
-cat{4} = 'cat 3';
-cat{5} = 'cat 4';
-
-poi1{1} = 'choose point of interest';
-poi1{2} = 'cat 1 poi 1';
-poi1{3} = 'cat 1 poi 2';
-poi1{4} = 'cat 1 poi 3';
-poi1{5} = 'cat 1 poi 4';
-poi1{6} = 'cat 1 poi 5';
-poi1{7} = 'cat 1 poi 6';
-poi1{8} = 'cat 1 poi 7';
-poi1{9} = 'cat 1 poi 8';
-
-poi2{1} = 'choose point of interest';
-poi2{2} = 'cat 2 poi 1';
-poi2{3} = 'cat 2 poi 2';
-poi2{4} = 'cat 2 poi 3';
-poi2{5} = 'cat 2 poi 4';
-
-poi3{1} = 'choose point of interest';
-poi3{2} = 'cat 3 poi 1';
-poi3{3} = 'cat 3 poi 2';
-
-poi4{1} = 'choose point of interest';
-poi4{2} = 'cat 4 poi 1';
-poi4{3} = 'cat 4 poi 2';
-poi4{4} = 'cat 4 poi 3';
-poi4{5} = 'cat 4 poi 4';
-poi4{6} = 'cat 4 poi 5';
-
 %draw a map
 h = gca;
 route = 0;
 openstreetmap_filename = 'LeCreusotWaysFF.osm';%'genoa.osm';
 parsed_osm_filename = 'data/LeCreusotWaysFF.mat'; %'osm file with data';
 map_img_filename = 'map40000.png'; % image file saved from online, if available
+poi_filename = 'data/LeCreusot_POI.xml'; %'osm file with data';
+parsed_poi_filename = 'data/LeCreusot_POI.mat'; %'osm file with data';
 
-[parsed_osm, osm_xml] = parse_openstreetmap(openstreetmap_filename,parsed_osm_filename ,2);
+[parsed_osm, osm_xml] = parse_openstreetmap(openstreetmap_filename, parsed_osm_filename ,2);
+[parsed_poi] = parse_poi_xml(poi_filename,parsed_poi_filename,2);
+cat = ['choose category', parsed_poi.category.name]
+
 %hshowMap = show_map(h, bounds, map_img_filename);
 %plot_way(h, parsed_osm, map_img_filename);
 %set(handles.showMapBtn, 'Value', 1);
@@ -1414,11 +1387,7 @@ function categoryMenuA_Callback(hObject, eventdata, handles)
 % Hints: contents = cellstr(get(hObject,'String')) returns categoryMenuA contents as cell array
 %        contents{get(hObject,'Value')} returns selected item from categoryMenuA
 global categoryA;
-global poiA;
-global poi1;
-global poi2;
-global poi3;
-global poi4;
+global parsed_poi;
 %contents = cellstr(get(hObject,'String'));
 %categoryA = contents{get(hObject,'Value')};
 categoryA = get(hObject,'Value');
@@ -1426,6 +1395,7 @@ switch categoryA
     case 1
         set(handles.poiMenuA,'String', 'choose the category first');
     case 2
+        poi = getPoi(categoryA-1, parsed_poi);
         set(handles.poiMenuA,'Value', 1);
         set(handles.poiMenuA,'String', poi1);
     case 3
