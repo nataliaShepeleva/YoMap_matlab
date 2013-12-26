@@ -109,7 +109,7 @@ global points;
 global openstreetmap_filename;
 global map_img_filename;
 global parsed_poi;
- 
+
 valueA = '';
 valueB = '';
 valueC = '';
@@ -134,8 +134,7 @@ parsed_poi_filename = 'data/LeCreusot_POI.mat'; %'osm file with data';
 
 [parsed_osm, osm_xml] = parse_openstreetmap(openstreetmap_filename, parsed_osm_filename ,2);
 [parsed_poi] = parse_poi_xml(poi_filename,parsed_poi_filename,2);
-cat = ['choose category', parsed_poi.category.name]
-
+cat = ['choose category', parsed_poi.category.name];
 %hshowMap = show_map(h, bounds, map_img_filename);
 %plot_way(h, parsed_osm, map_img_filename);
 %set(handles.showMapBtn, 'Value', 1);
@@ -419,6 +418,7 @@ global route;
 global points;
 global openstreetmap_filename;
 global map_img_filename;
+global parsed_poi;
 
 route = 0;
 %enC = get(handles.panelC, 'Visible');
@@ -452,7 +452,9 @@ if enRadSrch == 0
     else if enListA == 1
             if categoryA ~= 1
                 if poiA ~= 1
-                    [xA, yA] = category2coordinates(categoryA, poiA);
+                    resultA = get_poi_by_id_from_category_id(parsed_poi,categoryA-1, poiA-1);
+                    xA = resultA.xy(1);
+                    yA = resultA.xy(2);
                 else
                     warn(5);
                     xA = 0;
@@ -477,7 +479,9 @@ if enRadSrch == 0
     else if enListB == 1
             if categoryB ~= 1
                 if poiB ~= 1
-                    [xB, yB] = category2coordinates(categoryB, poiB);
+                    resultB = get_poi_by_id_from_category_id(parsed_poi,categoryB-1, poiB-1);
+                                        xA = resultA.xy(1);
+                    yA = resultA.xy(2);
                 else
                     warn(5);
                     xB = 0;
@@ -1394,12 +1398,11 @@ categoryA = get(hObject,'Value');
 switch categoryA
     case 1
         set(handles.poiMenuA,'String', 'choose the category first');
-    case 4
-        poi = ['choose poi', get_names_poi_by_category_id( parsed_poi,categoryA-1)];
+    otherwise
+        poi = ['choose poi'; get_names_poi_by_category_id( parsed_poi,categoryA-1)];
         set(handles.poiMenuA,'Value', 1);
         set(handles.poiMenuA,'String', poi);
 end
-poiA = get(hObject,'Value');
 
 
 
@@ -1425,31 +1428,18 @@ function categoryMenuB_Callback(hObject, eventdata, handles)
 % Hints: contents = cellstr(get(hObject,'String')) returns popupMenuB contents as cell array
 %        contents{get(hObject,'Value')} returns selected item from popupMenuB
 global categoryB;
-global poiB;
-global poi1;
-global poi2;
-global poi3;
-global poi4;
+global parsed_poi;
 %contents = cellstr(get(hObject,'String'));
-%categoryB = contents{get(hObject,'Value')};
+%categoryA = contents{get(hObject,'Value')};
 categoryB = get(hObject,'Value');
 switch categoryB
     case 1
         set(handles.poiMenuB,'String', 'choose the category first');
-    case 2
+    otherwise
+        poi = ['choose poi'; get_names_poi_by_category_id( parsed_poi,categoryB-1)];
         set(handles.poiMenuB,'Value', 1);
-        set(handles.poiMenuB,'String', poi1);
-    case 3
-        set(handles.poiMenuB,'Value', 1);
-        set(handles.poiMenuB,'String', poi2);
-    case 4
-        set(handles.poiMenuB,'Value', 1);
-        set(handles.poiMenuB,'String', poi3);
-    case 5
-        set(handles.poiMenuB,'Value', 1);
-        set(handles.poiMenuB,'String', poi4);
+        set(handles.poiMenuB,'String', poi);
 end
-poiB = get(hObject,'Value');
 
 
 % --- Executes during object creation, after setting all properties.
@@ -2404,6 +2394,7 @@ function poiMenuB_Callback(hObject, eventdata, handles)
 %        contents{get(hObject,'Value')} returns selected item from poiMenuB
 global poiB;
 poiB = get(hObject,'Value');
+
 
 % --- Executes during object creation, after setting all properties.
 function poiMenuB_CreateFcn(hObject, eventdata, handles)

@@ -109,7 +109,7 @@ global points;
 global openstreetmap_filename;
 global map_img_filename;
 global parsed_poi;
- 
+
 valueA = '';
 valueB = '';
 valueC = '';
@@ -418,6 +418,7 @@ global route;
 global points;
 global openstreetmap_filename;
 global map_img_filename;
+global parsed_poi;
 
 route = 0;
 %enC = get(handles.panelC, 'Visible');
@@ -451,7 +452,9 @@ if enRadSrch == 0
     else if enListA == 1
             if categoryA ~= 1
                 if poiA ~= 1
-                    [xA, yA] = category2coordinates(categoryA, poiA);
+                    resultA = get_poi_by_id_from_category_id(parsed_poi,categoryA-1, poiA-1);
+                    xA = resultA.xy(1);
+                    yA = resultA.xy(2);
                 else
                     warn(5);
                     xA = 0;
@@ -476,7 +479,9 @@ if enRadSrch == 0
     else if enListB == 1
             if categoryB ~= 1
                 if poiB ~= 1
-                    [xB, yB] = category2coordinates(categoryB, poiB);
+                    resultB = get_poi_by_id_from_category_id(parsed_poi,categoryB-1, poiB-1);
+                    xB = resultB.xy(1);
+                    yB = resultB.xy(2);
                 else
                     warn(5);
                     xB = 0;
@@ -1398,7 +1403,6 @@ switch categoryA
         set(handles.poiMenuA,'Value', 1);
         set(handles.poiMenuA,'String', poi);
 end
-poiA = get(hObject,'Value');
 
 
 
@@ -1436,8 +1440,6 @@ switch categoryB
         set(handles.poiMenuB,'Value', 1);
         set(handles.poiMenuB,'String', poi);
 end
-poiB= get(hObject,'Value');
-get_poi_by_id_from_category_id( parsed_poi,categoryB-1, poi_id )
 
 
 % --- Executes during object creation, after setting all properties.
@@ -1571,10 +1573,7 @@ function poiMenuA_Callback(hObject, eventdata, handles)
 % Hints: contents = cellstr(get(hObject,'String')) returns poiMenuA contents as cell array
 %        contents{get(hObject,'Value')} returns selected item from poiMenuA
 global poiA;
-global parsed_poi;
-global categoryA;
 poiA = get(hObject,'Value');
-get_poi_by_id_from_category_id( parsed_poi,categoryA-1, poiA-1)
 
 % --- Executes during object creation, after setting all properties.
 function poiMenuA_CreateFcn(hObject, eventdata, handles)
@@ -2394,10 +2393,7 @@ function poiMenuB_Callback(hObject, eventdata, handles)
 % Hints: contents = cellstr(get(hObject,'String')) returns poiMenuB contents as cell array
 %        contents{get(hObject,'Value')} returns selected item from poiMenuB
 global poiB;
-global parsed_poi;
-global categoryB;
 poiB = get(hObject,'Value');
-get_poi_by_id_from_category_id( parsed_poi,categoryB-1, poiB-1)
 
 
 % --- Executes during object creation, after setting all properties.
