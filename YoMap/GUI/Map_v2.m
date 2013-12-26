@@ -105,7 +105,8 @@ global h;
 global hshowMap;
 global hshowWay;
 global hshowRoute;
-
+global points;
+ 
 valueA = '';
 valueB = '';
 valueC = '';
@@ -117,6 +118,7 @@ transport = 0;
 
 hdotA = 0;
 hdotB = 0;
+points = 0;
 
 cat{1} = 'choose category';
 cat{2} = 'cat 1';
@@ -153,6 +155,7 @@ poi4{6} = 'cat 4 poi 5';
 
 %draw a map
 h = gca;
+route = 0;
 openstreetmap_filename = 'LeCreusotWaysFF.osm';%'genoa.osm';
 map_img_filename = 'map40000.png'; % image file saved from online, if available
 
@@ -160,9 +163,8 @@ map_img_filename = 'map40000.png'; % image file saved from online, if available
 %hshowMap = show_map(h, bounds, map_img_filename);
 %plot_way(h, parsed_osm, map_img_filename);
 %set(handles.showMapBtn, 'Value', 1);
-show_Map_Result(h, 1, 0, 0, parsed_osm);
+show_Map_Result(h, 1, 0, 0, 0, 0, parsed_osm);
 set(handles.showMapBtn, 'Value', 1);
-%set(handles.showRoadsBtn, 'Value', 1);
 
 
 % UIWAIT makes Map_v2 wait for user response (see UIRESUME)
@@ -436,6 +438,11 @@ global xA;
 global yA;
 global xB;
 global yB;
+global parsed_osm; 
+global route;
+global points;
+
+route = 0;
 %enC = get(handles.panelC, 'Visible');
 %enD = get(handles.panelD, 'Visible');
 %enE = get(handles.panelE, 'Visible');
@@ -450,6 +457,9 @@ enMapA = get(handles.mapBtnA, 'Value');
 enEnterB = get(handles.enterBtnB, 'Value');
 enListB = get(handles.listBtnB, 'Value');
 enMapB = get(handles.mapBtnB, 'Value');
+btnMap = get(handles.showMapBtn, 'Value');
+btnRoads = get(handles.showRoadsBtn, 'Value');
+btnWay = get(handles.showWayBtn, 'Value');
 if enRadSrch == 0
     %any search
     if enEnterA == 1
@@ -505,8 +515,11 @@ if enRadSrch == 0
     if xA ~= 0 & yA ~=0
         if xB ~= 0 & yB ~=0
             if transport ~=0
-                route = findShortestWayByPosition(parsed_osm,x(1),y(1),x(2),y(2),1);
-                plot_optimal_route(ax, route, parsed_osm);
+                route = findShortestWayByPosition(parsed_osm, xA, yA, xB, yB, transport);
+                points = [xB xA; yB yA];
+                show_Map_Result(h, btnMap, btnRoads, btnWay, route, points, parsed_osm); 
+                %plot_optimal_route(h, route, parsed_osm);
+                
                 %stringOut = searchAB(xA, yA, xB, yB, transport);
                 %set(handles.tInstr, 'String', stringOut, 'HorizontalAlignment', 'left');
             else
@@ -521,6 +534,8 @@ if enRadSrch == 0
 else
     %only radius search
 end
+
+
 % --- Executes on button press in addPoint.
 function addPoint_Callback(hObject, eventdata, handles)
 % hObject    handle to addPoint (see GCBO)
@@ -618,10 +633,12 @@ function showWayBtn_Callback(hObject, eventdata, handles)
 % Hint: get(hObject,'Value') returns toggle state of showWayBtn
 global h;
 global parsed_osm;
+global route;
+global points;
 btnMap = get(handles.showMapBtn, 'Value');
 btnRoads = get(handles.showRoadsBtn, 'Value');
 btnWay = get(handles.showWayBtn, 'Value');
-show_Map_Result(h, btnMap, btnRoads, btnWay, parsed_osm);
+show_Map_Result(h, btnMap, btnRoads, btnWay, route,  points, parsed_osm);
 
 
 
@@ -634,17 +651,12 @@ function showMapBtn_Callback(hObject, eventdata, handles)
 % Hint: get(hObject,'Value') returns toggle state of showMapBtn
 global h;
 global parsed_osm;
+global route; 
+global points;
 btnMap = get(handles.showMapBtn, 'Value');
 btnRoads = get(handles.showRoadsBtn, 'Value');
 btnWay = get(handles.showWayBtn, 'Value');
-if btnMap == 1
-    btnMap
-    show_Map_Result(h, btnMap, btnRoads, btnWay, parsed_osm);
-end
-if btnMap == 0
-    btnMap
-    show_Map_Result(h, btnMap, btnRoads, btnWay, parsed_osm);
-end
+show_Map_Result(h, btnMap, btnRoads, btnWay, route,  points, parsed_osm);
 
 % --- Executes on button press in showRoadsBtn.
 function showRoadsBtn_Callback(hObject, eventdata, handles)
@@ -655,17 +667,13 @@ function showRoadsBtn_Callback(hObject, eventdata, handles)
 % Hint: get(hObject,'Value') returns toggle state of showRoadsBtn
 global h;
 global parsed_osm;
+global route;
+global points;
 btnMap = get(handles.showMapBtn, 'Value');
 btnRoads = get(handles.showRoadsBtn, 'Value');
 btnWay = get(handles.showWayBtn, 'Value');
-if btnRoads == 1
-    btnRoads
-    show_Map_Result(h, btnMap, btnRoads, btnWay, parsed_osm);
-end
-if btnRoads == 0
-    btnRoads
-    show_Map_Result(h, btnMap, btnRoads, btnWay, parsed_osm);
-end
+show_Map_Result(h, btnMap, btnRoads, btnWay, route,  points, parsed_osm);
+
 
 % --- Executes on button press in layer4.
 function layer4_Callback(hObject, eventdata, handles)
@@ -1465,11 +1473,11 @@ function hidePanel_Callback(hObject, eventdata, handles)
 
 if get(handles.hidePanel, 'Value')
     set(handles.uipanelMain, 'Visible', 'off');
-    set(handles.uipanelInstr, 'Visible', 'off');
+    set(handles.uipanelInstr, 'Position', [0.177 -0.001 0.652 0.057]);
     set(handles.hidePanel, 'String', 'Show all')
 else
     set(handles.uipanelMain, 'Visible', 'on');
-    set(handles.uipanelInstr, 'Visible', 'on'); 
+    set(handles.uipanelInstr, 'Position', [0.177 0.217 0.652 0.057]); 
     set(handles.hidePanel, 'String', 'Hide all')
 end
 
