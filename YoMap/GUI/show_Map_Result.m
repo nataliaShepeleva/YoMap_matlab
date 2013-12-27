@@ -1,7 +1,6 @@
 function show_Map_Result(ax,map, road, way, route, points, parsed_osm, openstreetmap_filename, map_img_filename)
 
 cla reset;
-
 flag = 0;
 prepareMap(ax, parsed_osm.bounds);
 
@@ -33,3 +32,4 @@ if way == 1
         flag = 1;
     end
 end
+                
