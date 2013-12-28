@@ -3,7 +3,6 @@ n = size(parsed_poi.poi.xy(:,:));
 poi = 0;
 for poi_id = 1:1:n(2)
     if (abs(parsed_poi.poi.xy(1,poi_id) - x) < 0.0001) & (abs(parsed_poi.poi.xy(2,poi_id) - y) < 0.0001)
-            display('here')
             poi.id = parsed_poi.poi.id(1,poi_id);
             poi.cat_id = parsed_poi.poi.cat_id(1,poi_id);
             poi.xy = parsed_poi.poi.xy(:,poi_id);

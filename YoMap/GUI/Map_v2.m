@@ -446,7 +446,9 @@ if enRadSrch == 0
     %any search
     if enEnterA == 1
         if strcmp(valueA, '') == 0
-            [xA, yA] = enter2coordinates(valueA);
+            resultA = get_poi_by_name_or_address(parsed_poi, valueA)
+            xA = resultA.xy(1);
+            yA = resultA.xy(2);
         else
             warn(2);            
             xA = 0;
@@ -473,7 +475,9 @@ if enRadSrch == 0
     
     if enEnterB == 1
         if strcmp(valueB, '') == 0
-            [xB, yB] = enter2coordinates(valueB);
+            resultB = get_poi_by_name_or_address(parsed_poi, valueB)
+            xB = resultA.xy(1);
+            yB = resultA.xy(2);
         else
             warn(3);            
             xB = 0;
