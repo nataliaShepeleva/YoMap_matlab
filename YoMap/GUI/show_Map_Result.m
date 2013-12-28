@@ -1,7 +1,7 @@
 function show_Map_Result(ax,map, road, way, category, route, points, parsed_osm, parsed_poi, map_img_filename)
+cla reset;
 global h;
 h = ax;
-cla reset;
 flag = 0;
 prepareMap(ax, parsed_osm.bounds);
 
@@ -73,26 +73,27 @@ if category == 1
             x = result.xy(1);
             y = result.xy(2);
             hold(h, 'on');
-            plot(h, x,y, 'o','MarkerEdgeColor','b','MarkerFaceColor',color(i,:), 'MarkerSize',10);
+            plot(h, x,y, 'p','MarkerEdgeColor','b','MarkerFaceColor',color(i,:), 'MarkerSize',12);
         end
     end
     flag = 1;
-    hit_tester()
+%     hit_tester()
 end
 end
+% for any case if we need to know which mouse button ispressed
 
-function hit_tester(varargin)
-global h;
-% Sample code for detecting which mouse button was pressed in a figure.
-if nargin == 0
-   % fig = figure;
-    set(h, 'buttondownfcn', 'hit_tester(get(gcf, ''selectiontype''))');
-else
-    if nargin == 1
-        button = varargin(1);
-        disp(button);
-        end
-end
-end
+% function hit_tester(varargin)
+% global h;
+% % Sample code for detecting which mouse button was pressed in a figure.
+% if nargin == 0
+%    % fig = figure;
+%     set(h, 'buttondownfcn', 'hit_tester(get(gcf, ''selectiontype''))');
+% else
+%     if nargin == 1
+%         button = varargin(1);
+%         disp(button);
+%         end
+% end
+% end
 
                 

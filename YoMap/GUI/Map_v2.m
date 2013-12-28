@@ -447,8 +447,14 @@ if enRadSrch == 0
     if enEnterA == 1
         if strcmp(valueA, '') == 0
             resultA = get_poi_by_name_or_address(parsed_poi, valueA)
-            xA = resultA.xy(1);
-            yA = resultA.xy(2);
+            if resultA ~= 0
+                xA = resultA.xy(1);
+                yA = resultA.xy(2);
+            else
+                warn(7);
+                xA = 0;
+                yA = 0;
+            end
         else
             warn(2);            
             xA = 0;
@@ -476,8 +482,14 @@ if enRadSrch == 0
     if enEnterB == 1
         if strcmp(valueB, '') == 0
             resultB = get_poi_by_name_or_address(parsed_poi, valueB)
-            xB = resultA.xy(1);
-            yB = resultA.xy(2);
+            if resultB ~= 0
+                xB = resultB.xy(1);
+                yB = resultB.xy(2);
+            else
+                warn(7);
+                xB = 0;
+                yB = 0;
+            end
         else
             warn(3);            
             xB = 0;
@@ -546,12 +558,17 @@ if enRadSrch == 0
                 %set(handles.tInstr, 'String', stringOut, 'HorizontalAlignment', 'left');
             else
                 warn(1);
+                transport = 0;
             end
         else
             warn(3);
+            xB = 0;
+            yB = 0;
         end
     else
         warn(2);
+        xA = 0;
+        yA = 0;
     end
 else
     %only radius search

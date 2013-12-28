@@ -1,0 +1,3 @@
+When u choose 2 points on map to draw the way it shows one way, 
+BUT after pressing switch and search it shows another way for the same points
+just check images

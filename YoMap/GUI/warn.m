@@ -12,6 +12,8 @@ switch numb
         error = 'Choose the point of interest';
     case 6
         error = 'Sorry, no path found';
+    case 7
+        error = 'Sorry, this object does not exist or written not correctly';
 end
 
 hand = errordlg(error, 'YoMap');
