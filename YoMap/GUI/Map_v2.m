@@ -22,7 +22,7 @@ function varargout = Map_v2(varargin)
 
 % Edit the above text to modify the response to help Map_v2
 
-% Last Modified by GUIDE v2.5 25-Dec-2013 21:17:29
+% Last Modified by GUIDE v2.5 27-Dec-2013 22:10:59
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -59,7 +59,7 @@ handles.output = hObject;
 
 % Update handles structure
 guidata(hObject, handles);
-
+%set(gca, 'Units', 'normalized', 'Position', [0, 0.1, 1, 1]);
 set(handles.addPoint, 'UserData', 0);
 
 %define global variables
@@ -138,12 +138,14 @@ cat = ['choose category', parsed_poi.category.name];
 %hshowMap = show_map(h, bounds, map_img_filename);
 %plot_way(h, parsed_osm, map_img_filename);
 %set(handles.showMapBtn, 'Value', 1);
-show_Map_Result(h, 1, 0, 0, 0, 0, parsed_osm, openstreetmap_filename, map_img_filename);
+show_Map_Result(h, 1, 0, 0, 0, 0, 0, parsed_osm, parsed_poi, map_img_filename);
 set(handles.showMapBtn, 'Value', 1);
 set(handles.footBtn, 'Value', 1);
 
+parsed_poi.poi.xy(2,1)
+
 % UIWAIT makes Map_v2 wait for user response (see UIRESUME)
-% uiwait(handles.figure1);
+% uiwait(handles.map);
 
 
 % --- Outputs from this function are returned to the command line.
@@ -437,6 +439,7 @@ enListB = get(handles.listBtnB, 'Value');
 enMapB = get(handles.mapBtnB, 'Value');
 btnMap = get(handles.showMapBtn, 'Value');
 btnRoads = get(handles.showRoadsBtn, 'Value');
+btnCategory = get(handles.showCategoryBtn, 'Value');
 set(handles.showWayBtn, 'Value', 1);
 btnWay = get(handles.showWayBtn, 'Value');
 if enRadSrch == 0
@@ -510,7 +513,7 @@ if enRadSrch == 0
                         drawBtnA_Callback(hObject, eventdata, handles);
                         set(handles.drawBtnB, 'Value',0);
                         drawBtnB_Callback(hObject, eventdata, handles);
-                        show_Map_Result(h, btnMap, btnRoads, btnWay, route,  points, parsed_osm, openstreetmap_filename, map_img_filename);
+                        show_Map_Result(h, btnMap, btnRoads, btnWay, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
                         set(handles.drawBtnA, 'Value',1);
                         drawBtnA_Callback(hObject, eventdata, handles);
                         set(handles.drawBtnB, 'Value',1);
@@ -519,19 +522,19 @@ if enRadSrch == 0
                     if btA == 1 & btB == 0
                         set(handles.drawBtnA, 'Value',0);
                         drawBtnA_Callback(hObject, eventdata, handles);
-                        show_Map_Result(h, btnMap, btnRoads, btnWay, route,  points, parsed_osm, openstreetmap_filename, map_img_filename);
+                        show_Map_Result(h, btnMap, btnRoads, btnWay, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
                         set(handles.drawBtnA, 'Value',1);
                         drawBtnA_Callback(hObject, eventdata, handles);
                     end
                     if btA == 0 & btB == 1
                         set(handles.drawBtnB, 'Value',0);
                         drawBtnB_Callback(hObject, eventdata, handles);
-                        show_Map_Result(h, btnMap, btnRoads, btnWay, route,  points, parsed_osm, openstreetmap_filename, map_img_filename);
+                        show_Map_Result(h, btnMap, btnRoads, btnWay, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
                         set(handles.drawBtnB, 'Value',1);
                         drawBtnB_Callback(hObject, eventdata, handles);
                     end
                     if btA == 0 & btB == 0
-                        show_Map_Result(h, btnMap, btnRoads, btnWay, route,  points, parsed_osm, openstreetmap_filename, map_img_filename);
+                        show_Map_Result(h, btnMap, btnRoads, btnWay, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
                     end 
                 end
                 
@@ -648,13 +651,14 @@ function showWayBtn_Callback(hObject, eventdata, handles)
 % Hint: get(hObject,'Value') returns toggle state of showWayBtn
 global h;
 global parsed_osm;
-global route;
+global route; 
 global points;
-global openstreetmap_filename;
-global map_img_filename;
+global parsed_poi;
+global map_img_filename
 btnMap = get(handles.showMapBtn, 'Value');
 btnRoads = get(handles.showRoadsBtn, 'Value');
 btnWay = get(handles.showWayBtn, 'Value');
+btnCategory = get(handles.showCategoryBtn, 'Value');
 btA = get(handles.drawBtnA, 'Value');
 btB = get(handles.drawBtnB, 'Value');
 if btA == 1 & btB == 1
@@ -662,7 +666,7 @@ if btA == 1 & btB == 1
     drawBtnA_Callback(hObject, eventdata, handles);
     set(handles.drawBtnB, 'Value',0);
     drawBtnB_Callback(hObject, eventdata, handles);
-    show_Map_Result(h, btnMap, btnRoads, btnWay, route,  points, parsed_osm, openstreetmap_filename, map_img_filename);
+    show_Map_Result(h, btnMap, btnRoads, btnWay, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
     set(handles.drawBtnA, 'Value',1);
     drawBtnA_Callback(hObject, eventdata, handles);
     set(handles.drawBtnB, 'Value',1);
@@ -671,19 +675,19 @@ end
 if btA == 1 & btB == 0
     set(handles.drawBtnA, 'Value',0);
     drawBtnA_Callback(hObject, eventdata, handles);
-    show_Map_Result(h, btnMap, btnRoads, btnWay, route,  points, parsed_osm, openstreetmap_filename, map_img_filename);
+    show_Map_Result(h, btnMap, btnRoads, btnWay, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
     set(handles.drawBtnA, 'Value',1);
     drawBtnA_Callback(hObject, eventdata, handles);
 end
 if btA == 0 & btB == 1
     set(handles.drawBtnB, 'Value',0);
     drawBtnB_Callback(hObject, eventdata, handles);
-    show_Map_Result(h, btnMap, btnRoads, btnWay, route,  points, parsed_osm, openstreetmap_filename, map_img_filename);
+    show_Map_Result(h, btnMap, btnRoads, btnWay, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
     set(handles.drawBtnB, 'Value',1);
     drawBtnB_Callback(hObject, eventdata, handles);
 end
 if btA == 0 & btB == 0
-    show_Map_Result(h, btnMap, btnRoads, btnWay, route,  points, parsed_osm, openstreetmap_filename, map_img_filename);
+    show_Map_Result(h, btnMap, btnRoads, btnWay, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
 end 
 
 
@@ -698,11 +702,12 @@ global h;
 global parsed_osm;
 global route; 
 global points;
-global openstreetmap_filename;
+global parsed_poi;
 global map_img_filename
 btnMap = get(handles.showMapBtn, 'Value');
 btnRoads = get(handles.showRoadsBtn, 'Value');
 btnWay = get(handles.showWayBtn, 'Value');
+btnCategory = get(handles.showCategoryBtn, 'Value');
 btA = get(handles.drawBtnA, 'Value');
 btB = get(handles.drawBtnB, 'Value');
 if btA == 1 & btB == 1
@@ -710,7 +715,7 @@ if btA == 1 & btB == 1
     drawBtnA_Callback(hObject, eventdata, handles);
     set(handles.drawBtnB, 'Value',0);
     drawBtnB_Callback(hObject, eventdata, handles);
-    show_Map_Result(h, btnMap, btnRoads, btnWay, route,  points, parsed_osm, openstreetmap_filename, map_img_filename);
+    show_Map_Result(h, btnMap, btnRoads, btnWay, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
     set(handles.drawBtnA, 'Value',1);
     drawBtnA_Callback(hObject, eventdata, handles);
     set(handles.drawBtnB, 'Value',1);
@@ -719,19 +724,19 @@ end
 if btA == 1 & btB == 0
     set(handles.drawBtnA, 'Value',0);
     drawBtnA_Callback(hObject, eventdata, handles);
-    show_Map_Result(h, btnMap, btnRoads, btnWay, route,  points, parsed_osm, openstreetmap_filename, map_img_filename);
+    show_Map_Result(h, btnMap, btnRoads, btnWay, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
     set(handles.drawBtnA, 'Value',1);
     drawBtnA_Callback(hObject, eventdata, handles);
 end
 if btA == 0 & btB == 1
     set(handles.drawBtnB, 'Value',0);
     drawBtnB_Callback(hObject, eventdata, handles);
-    show_Map_Result(h, btnMap, btnRoads, btnWay, route,  points, parsed_osm, openstreetmap_filename, map_img_filename);
+    show_Map_Result(h, btnMap, btnRoads, btnWay, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
     set(handles.drawBtnB, 'Value',1);
     drawBtnB_Callback(hObject, eventdata, handles);
 end
 if btA == 0 & btB == 0
-    show_Map_Result(h, btnMap, btnRoads, btnWay, route,  points, parsed_osm, openstreetmap_filename, map_img_filename);
+    show_Map_Result(h, btnMap, btnRoads, btnWay, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
 end 
 
 
@@ -744,13 +749,14 @@ function showRoadsBtn_Callback(hObject, eventdata, handles)
 % Hint: get(hObject,'Value') returns toggle state of showRoadsBtn
 global h;
 global parsed_osm;
-global route;
+global route; 
 global points;
-global openstreetmap_filename;
-global map_img_filename;
+global parsed_poi;
+global map_img_filename
 btnMap = get(handles.showMapBtn, 'Value');
 btnRoads = get(handles.showRoadsBtn, 'Value');
 btnWay = get(handles.showWayBtn, 'Value');
+btnCategory = get(handles.showCategoryBtn, 'Value');
 btA = get(handles.drawBtnA, 'Value');
 btB = get(handles.drawBtnB, 'Value');
 if btA == 1 & btB == 1
@@ -758,7 +764,7 @@ if btA == 1 & btB == 1
     drawBtnA_Callback(hObject, eventdata, handles);
     set(handles.drawBtnB, 'Value',0);
     drawBtnB_Callback(hObject, eventdata, handles);
-    show_Map_Result(h, btnMap, btnRoads, btnWay, route,  points, parsed_osm, openstreetmap_filename, map_img_filename);
+    show_Map_Result(h, btnMap, btnRoads, btnWay, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
     set(handles.drawBtnA, 'Value',1);
     drawBtnA_Callback(hObject, eventdata, handles);
     set(handles.drawBtnB, 'Value',1);
@@ -767,19 +773,19 @@ end
 if btA == 1 & btB == 0
     set(handles.drawBtnA, 'Value',0);
     drawBtnA_Callback(hObject, eventdata, handles);
-    show_Map_Result(h, btnMap, btnRoads, btnWay, route,  points, parsed_osm, openstreetmap_filename, map_img_filename);
+    show_Map_Result(h, btnMap, btnRoads, btnWay, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
     set(handles.drawBtnA, 'Value',1);
     drawBtnA_Callback(hObject, eventdata, handles);
 end
 if btA == 0 & btB == 1
     set(handles.drawBtnB, 'Value',0);
     drawBtnB_Callback(hObject, eventdata, handles);
-    show_Map_Result(h, btnMap, btnRoads, btnWay, route,  points, parsed_osm, openstreetmap_filename, map_img_filename);
+    show_Map_Result(h, btnMap, btnRoads, btnWay, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
     set(handles.drawBtnB, 'Value',1);
     drawBtnB_Callback(hObject, eventdata, handles);
 end
 if btA == 0 & btB == 0
-    show_Map_Result(h, btnMap, btnRoads, btnWay, route,  points, parsed_osm, openstreetmap_filename, map_img_filename);
+    show_Map_Result(h, btnMap, btnRoads, btnWay, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
 end 
 
 
@@ -1646,6 +1652,7 @@ end
 xA = 0;
 yA = 0;
 [xA,yA] = ginput(1)
+%[xA, yA] = map_WindowButtonDownFcn(hObject, eventdata, handles)
 x = num2str(xA);
 y = num2str(yA);
 set(handles.coordXA, 'String', x);
@@ -2414,3 +2421,71 @@ function showWayBtn_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to showWayBtn (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
+
+
+% --- Executes on button press in showCategoryBtn.
+function showCategoryBtn_Callback(hObject, eventdata, handles)
+% hObject    handle to showCategoryBtn (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of showCategoryBtn
+global h;
+global parsed_osm;
+global route; 
+global points;
+global parsed_poi;
+global map_img_filename
+btnMap = get(handles.showMapBtn, 'Value');
+btnRoads = get(handles.showRoadsBtn, 'Value');
+btnWay = get(handles.showWayBtn, 'Value');
+btnCategory = get(handles.showCategoryBtn, 'Value');
+btA = get(handles.drawBtnA, 'Value');
+btB = get(handles.drawBtnB, 'Value');
+if btA == 1 & btB == 1
+    set(handles.drawBtnA, 'Value',0);
+    drawBtnA_Callback(hObject, eventdata, handles);
+    set(handles.drawBtnB, 'Value',0);
+    drawBtnB_Callback(hObject, eventdata, handles);
+    show_Map_Result(h, btnMap, btnRoads, btnWay, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
+    set(handles.drawBtnA, 'Value',1);
+    drawBtnA_Callback(hObject, eventdata, handles);
+    set(handles.drawBtnB, 'Value',1);
+    drawBtnB_Callback(hObject, eventdata, handles);
+end
+if btA == 1 & btB == 0
+    set(handles.drawBtnA, 'Value',0);
+    drawBtnA_Callback(hObject, eventdata, handles);
+    show_Map_Result(h, btnMap, btnRoads, btnWay, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
+    set(handles.drawBtnA, 'Value',1);
+    drawBtnA_Callback(hObject, eventdata, handles);
+end
+if btA == 0 & btB == 1
+    set(handles.drawBtnB, 'Value',0);
+    drawBtnB_Callback(hObject, eventdata, handles);
+    show_Map_Result(h, btnMap, btnRoads, btnWay, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
+    set(handles.drawBtnB, 'Value',1);
+    drawBtnB_Callback(hObject, eventdata, handles);
+end
+if btA == 0 & btB == 0
+    show_Map_Result(h, btnMap, btnRoads, btnWay, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
+end 
+
+
+
+
+% --- Executes on mouse press over figure background, over a disabled or
+% --- inactive control, or over an axes background.
+function [x, y] = map_WindowButtonDownFcn(hObject, eventdata, handles)
+% hObject    handle to map (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+global parsed_poi;
+if get(handles.showMapBtn,'Value') == 1 | get(handles.showRoadsBtn,'Value') == 1 | get(handles.showWayBtn,'Value') == 1 | get(handles.showCategoryBtn,'Value') == 1
+    pos = get(handles.mapDraw, 'currentpoint');% get mouse location on figure
+    x = pos(1, 1)
+    y = pos(1, 2)
+    poi = get_poi_by_coordinates(parsed_poi, x, y)
+    %set(handles.lbl_last_action, 'string', ['Mouse pressed @ X: ', num2str(x), ', Y: ', num2str(y)]);
+end
+
