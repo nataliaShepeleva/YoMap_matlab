@@ -2,7 +2,7 @@ function [ poi ] = get_poi_by_coordinates(parsed_poi, x, y)
 n = size(parsed_poi.poi.xy(:,:));
 poi = 0;
 for poi_id = 1:1:n(2)
-    if (parsed_poi.poi.xy(1,poi_id) == x) & (parsed_poi.poi.xy(2,poi_id) == y)
+    if (abs(parsed_poi.poi.xy(1,poi_id) - x) < 0.0001) & (abs(parsed_poi.poi.xy(2,poi_id) - y) < 0.0001)
             display('here')
             poi.id = parsed_poi.poi.id(1,poi_id);
             poi.cat_id = parsed_poi.poi.cat_id(1,poi_id);
