@@ -1,6 +1,6 @@
 function [ poi ] = get_poi_by_name_or_address(parsed_poi, name)
-n = size(parsed_poi.poi.name)
-poi = 0;
+n = size(parsed_poi.poi.name);
+poi.id = 0;
 for poi_id = 1:1:n(2)
     if strcmp(parsed_poi.poi.name{1,poi_id}, name) == 1 | strcmp(parsed_poi.poi.address{1,poi_id}, name) == 1
         poi.id = parsed_poi.poi.id(1,poi_id);

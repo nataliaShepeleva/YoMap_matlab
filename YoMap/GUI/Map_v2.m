@@ -22,7 +22,7 @@ function varargout = Map_v2(varargin)
 
 % Edit the above text to modify the response to help Map_v2
 
-% Last Modified by GUIDE v2.5 27-Dec-2013 22:10:59
+% Last Modified by GUIDE v2.5 29-Dec-2013 04:54:36
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -109,6 +109,9 @@ global points;
 global openstreetmap_filename;
 global map_img_filename;
 global parsed_poi;
+global point_choosed;
+global flag_point_A;
+global flag_point_B;
 
 valueA = '';
 valueB = '';
@@ -121,7 +124,13 @@ transport = 2;
 
 hdotA = 0;
 hdotB = 0;
+flag_point_A = 0;
+flag_point_B = 0;
 points = 0;
+xA = 0;
+yA = 0;
+xB = 0;
+yB = 0;
 
 %draw a map
 h = gca;
@@ -141,8 +150,6 @@ cat = ['choose category', parsed_poi.category.name];
 show_Map_Result(h, 1, 0, 0, 0, 0, 0, parsed_osm, parsed_poi, map_img_filename);
 set(handles.showMapBtn, 'Value', 1);
 set(handles.footBtn, 'Value', 1);
-
-parsed_poi.poi.xy(2,1)
 
 % UIWAIT makes Map_v2 wait for user response (see UIRESUME)
 % uiwait(handles.map);
@@ -190,7 +197,26 @@ function userEnterA_Callback(hObject, eventdata, handles)
 % Hints: get(hObject,'String') returns contents of userEnterA as text
 %        str2double(get(hObject,'String')) returns contents of userEnterA as a double
 global valueA;
-valueA = get(hObject,'String');
+global parsed_poi;
+global xA;
+global yA;
+global hdotA;
+global h;
+global flag_point_A;
+valueA = get(handles.userEnterA,'String')
+resultA = get_poi_by_name_or_address(parsed_poi, valueA)
+if resultA.id ~= 0
+    xA = resultA.xy(1);
+    yA = resultA.xy(2);
+    if flag_point_A == 0
+        hdotA = draw_point(h, xA, yA, 0);
+        flag_point_A = 1;
+    else
+        delete(hdotA)
+        hdotA = draw_point(h, xA, yA, 0);
+        flag_point_A = 1;
+    end
+end
 
 
 
@@ -214,7 +240,19 @@ function userEnterB_Callback(hObject, eventdata, handles)
 % Hints: get(hObject,'String') returns contents of userEnterB as text
 %        str2double(get(hObject,'String')) returns contents of userEnterB as a double
 global valueB;
+global parsed_poi;
+global xB;
+global yB;
+global hdotB;
 valueB = get(hObject,'String');
+resultB = get_poi_by_name_or_address(parsed_poi, valueB)
+if resultB ~= 0
+    xB = resultB.xy(1);
+    yB = resultB.xy(2);
+    hold (h, 'on')
+    hdotB = plot(h, xB,yB, 'o','MarkerEdgeColor','k','MarkerFaceColor','g', 'MarkerSize',10);
+    hold (h, 'off')
+end
 
 % --- Executes during object creation, after setting all properties.
 function userEnterB_CreateFcn(hObject, eventdata, handles)
@@ -447,7 +485,7 @@ if enRadSrch == 0
     if enEnterA == 1
         if strcmp(valueA, '') == 0
             resultA = get_poi_by_name_or_address(parsed_poi, valueA)
-            if resultA ~= 0
+            if resultA.id ~= 0
                 xA = resultA.xy(1);
                 yA = resultA.xy(2);
             else
@@ -481,7 +519,7 @@ if enRadSrch == 0
     
     if enEnterB == 1
         if strcmp(valueB, '') == 0
-            resultB = get_poi_by_name_or_address(parsed_poi, valueB)
+            resultB.id = get_poi_by_name_or_address(parsed_poi, valueB)
             if resultB ~= 0
                 xB = resultB.xy(1);
                 yB = resultB.xy(2);
@@ -831,7 +869,8 @@ global categoryA;
 global poiA;
 global xA;
 global yA;
-if get(handles.enterBtnA, 'Value')
+global flag_point_A;
+if get(handles.enterBtnA, 'Value') == 1
     set(handles.listBtnA, 'Value', 0);
     set(handles.mapBtnA, 'Value', 0);
     
@@ -852,16 +891,22 @@ if get(handles.enterBtnA, 'Value')
     set(handles.categoryMenuA, 'Visible', 'off');
     set(handles.poiMenuA, 'Visible', 'off')
     if (get(handles.drawBtnA, 'Value') == 1)
-        if hdotA == 0
+        if flag_point_A == 0
             set(handles.drawBtnA, 'Value', 0);
         else
             delete(hdotA);
+            flag_point_A = 0;
             set(handles.drawBtnA, 'Value', 0);
         end
     end
+    userEnterA_Callback(hObject, eventdata, handles)
 else
     set(handles.userEnterA, 'Enable', 'off');
     set(handles.userEnterA, 'String', '');
+    if flag_point_A == 1
+        delete(hdotA); 
+        flag_point_A = 0;
+    end
 end
 
 
@@ -1136,54 +1181,102 @@ if (get(handles.enterBtnA, 'Value') == 1 & get(handles.enterBtnB, 'Value') == 1)
     valueA = get(handles.userEnterA, 'String');
     valueB = get(handles.userEnterB, 'String');
 end
+
 if (get(handles.mapBtnA, 'Value') == 1 & get(handles.mapBtnB, 'Value') == 1)
     xAstr = get(handles.coordXA, 'String');
     xBstr = get(handles.coordXB, 'String');
     yAstr = get(handles.coordYA, 'String');
     yBstr = get(handles.coordYB, 'String');
     if strcmp(xAstr,'') == 0 & strcmp(yAstr,'') == 0 & strcmp(xBstr,'') == 0 & strcmp(yBstr,'') == 0 
-        set(handles.coordXA, 'String', xBstr);
-        set(handles.coordXB, 'String', xAstr);
-        set(handles.coordYA, 'String', yBstr);
-        set(handles.coordYB, 'String', yAstr);
-        xAstr = get(handles.coordXA, 'String');
-        xBstr = get(handles.coordXB, 'String');
-        yAstr = get(handles.coordYA, 'String');
-        yBstr = get(handles.coordYB, 'String');
-
-        xA = str2num(xAstr);
-        xB = str2num(xBstr);
-        yA = str2num(yAstr);
-        yB = str2num(yBstr);
+%         set(handles.coordXA, 'String', xBstr);
+%         set(handles.coordXB, 'String', xAstr);
+%         set(handles.coordYA, 'String', yBstr);
+%         set(handles.coordYB, 'String', yAstr);
+%         xAstr = get(handles.coordXA, 'String');
+%         xBstr = get(handles.coordXB, 'String');
+%         yAstr = get(handles.coordYA, 'String');
+%         yBstr = get(handles.coordYB, 'String');
+% 
+%         xA = str2num(xAstr);
+%         xB = str2num(xBstr);
+%         yA = str2num(yAstr);
+%         yB = str2num(yBstr);
 
         if get(handles.drawBtnA, 'Value') == 0 & get(handles.drawBtnB, 'Value') == 0
             htemp = hdotA;
             hdotA = hdotB;
             hdotB = htemp;
+            set(handles.coordXA, 'String', xBstr);
+            set(handles.coordXB, 'String', xAstr);
+            set(handles.coordYA, 'String', yBstr);
+            set(handles.coordYB, 'String', yAstr);
+            xAstr = get(handles.coordXA, 'String');
+            xBstr = get(handles.coordXB, 'String');
+            yAstr = get(handles.coordYA, 'String');
+            yBstr = get(handles.coordYB, 'String');
+            xA = str2num(xAstr);
+            xA = str2num(xAstr);
+            xB = str2num(xBstr);
+            yA = str2num(yAstr);
+            yB = str2num(yBstr);
         end
         if get(handles.drawBtnA, 'Value') == 1 & get(handles.drawBtnB, 'Value') == 1
             delete(hdotA);
             delete(hdotB);
             hold (h, 'on')
             hdotA = plot(h, xB,yB, 'o','MarkerEdgeColor','k','MarkerFaceColor','r', 'MarkerSize',10);
-            hold (h, 'off')
-            hold (h, 'on')
             hdotB = plot(h, xA,yA, 'o','MarkerEdgeColor','k','MarkerFaceColor','g', 'MarkerSize',10);
-            hold (h, 'off')
+            set(handles.coordXA, 'String', xBstr);
+            set(handles.coordXB, 'String', xAstr);
+            set(handles.coordYA, 'String', yBstr);
+            set(handles.coordYB, 'String', yAstr);
+            xAstr = get(handles.coordXA, 'String');
+            xBstr = get(handles.coordXB, 'String');
+            yAstr = get(handles.coordYA, 'String');
+            yBstr = get(handles.coordYB, 'String');
+            xA = str2num(xAstr)
+            xA = str2num(xAstr)
+            xB = str2num(xBstr)
+            yA = str2num(yAstr)
+            yB = str2num(yBstr)
         end;
         if get(handles.drawBtnB, 'Value') == 1 & get(handles.drawBtnA, 'Value') == 0
             hdotA = hdotB;
             delete(hdotB);
             hold (h, 'on')
             hdotB = plot(h, xA,yA, 'o','MarkerEdgeColor','k','MarkerFaceColor','g', 'MarkerSize',10);
-            hold (h, 'off')
+            set(handles.coordXA, 'String', xBstr);
+            set(handles.coordXB, 'String', xAstr);
+            set(handles.coordYA, 'String', yBstr);
+            set(handles.coordYB, 'String', yAstr);
+            xAstr = get(handles.coordXA, 'String');
+            xBstr = get(handles.coordXB, 'String');
+            yAstr = get(handles.coordYA, 'String');
+            yBstr = get(handles.coordYB, 'String');
+            xA = str2num(xAstr);
+            xA = str2num(xAstr);
+            xB = str2num(xBstr);
+            yA = str2num(yAstr);
+            yB = str2num(yBstr);
         end;
         if get(handles.drawBtnB, 'Value') == 0 & get(handles.drawBtnA, 'Value') == 1
             hdotB = hdotA;
             delete(hdotA);
             hold (h, 'on')
             hdotA = plot(h, xB,yB, 'o','MarkerEdgeColor','k','MarkerFaceColor','r', 'MarkerSize',10);
-            hold (h, 'off')
+            set(handles.coordXA, 'String', xBstr);
+            set(handles.coordXB, 'String', xAstr);
+            set(handles.coordYA, 'String', yBstr);
+            set(handles.coordYB, 'String', yAstr);
+            xAstr = get(handles.coordXA, 'String');
+            xBstr = get(handles.coordXB, 'String');
+            yAstr = get(handles.coordYA, 'String');
+            yBstr = get(handles.coordYB, 'String');
+            xA = str2num(xAstr);
+            xA = str2num(xAstr);
+            xB = str2num(xBstr);
+            yA = str2num(yAstr);
+            yB = str2num(yBstr);
         end
     end
 end
@@ -1667,13 +1760,19 @@ function showBtnA_Callback(hObject, eventdata, handles)
 global xA;
 global yA;
 global hdotA;
+global point_choosed;
 if (get(handles.drawBtnA, 'Value') == 1 & hdotA == 0)
     set(handles.drawBtnA, 'Value', 0);
 end
-xA = 0;
-yA = 0;
-[xA,yA] = ginput(1)
-%[xA, yA] = map_WindowButtonDownFcn(hObject, eventdata, handles)
+% xA = 0;
+% yA = 0;
+% [xA,yA] = ginput(1)
+% % point_choosed = 0;
+% % if get(handles.showBtnA, 'Value') == 1
+% %     [xA, yA] = map_WindowButtonDownFcn(hObject, eventdata, handles)
+% %     set(handles.showBtnA, 'Value', 0)
+% % end
+
 x = num2str(xA);
 y = num2str(yA);
 set(handles.coordXA, 'String', x);
@@ -1688,6 +1787,7 @@ else
     drawBtnA_Callback(hObject, eventdata, handles);
 end
 
+
 % --- Executes on button press in drawBtnA.
 function drawBtnA_Callback(hObject, eventdata, handles)
 % hObject    handle to drawBtnA (see GCBO)
@@ -1699,16 +1799,17 @@ global xA;
 global yA;
 global h;
 global hdotA;
-if (strcmp(get(handles.coordXA, 'String'),'') == 0 & strcmp(get(handles.coordYA, 'String'),'') == 0)
-    if (get(handles.drawBtnA, 'Value') == 1)
-        hold (h, 'on')
-        hdotA = plot(h, xA,yA, 'o','MarkerEdgeColor','k','MarkerFaceColor','r', 'MarkerSize',10);
-        hold (h, 'off')
-    end;
-    if (get(handles.drawBtnA, 'Value') == 0)
-        delete(hdotA);
-    end
+%if (strcmp(get(handles.coordXA, 'String'),'') == 0 & strcmp(get(handles.coordYA, 'String'),'') == 0)
+if (get(handles.drawBtnA, 'Value') == 1)
+    hold (h, 'on')
+    hdotA = plot(h, xA,yA, 'o','MarkerEdgeColor','k','MarkerFaceColor','r', 'MarkerSize',10);
+    hold (h, 'off')
 end
+if (get(handles.drawBtnA, 'Value') == 0)
+    delete(hdotA);
+    hdotA
+end
+%end
 
 
 
@@ -2382,12 +2483,15 @@ function showBtnB_Callback(hObject, eventdata, handles)
 global xB;
 global yB;
 global hdotB;
+global point_choosed;
 if (get(handles.drawBtnB, 'Value') == 1 & hdotB == 0)
     set(handles.drawBtnB, 'Value', 0);
 end
-xB = 0;
-yB = 0;
-[xB,yB] = ginput(1)
+% xB = 0;
+% yB = 0;
+% [xB,yB] = ginput(1)
+% % point_choosed = 1;
+% % [xB,yB] = map_WindowButtonDownFcn(hObject, eventdata, handles)
 x = num2str(xB);
 y = num2str(yB);
 set(handles.coordXB, 'String', x);
@@ -2502,11 +2606,133 @@ function [x, y] = map_WindowButtonDownFcn(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 global parsed_poi;
-if get(handles.showMapBtn,'Value') == 1 | get(handles.showRoadsBtn,'Value') == 1 | get(handles.showWayBtn,'Value') == 1 | get(handles.showCategoryBtn,'Value') == 1
-    pos = get(handles.mapDraw, 'currentpoint');% get mouse location on figure
-    x = pos(1, 1)
-    y = pos(1, 2)
-    poi = get_poi_by_coordinates(parsed_poi, x, y)
-    %set(handles.lbl_last_action, 'string', ['Mouse pressed @ X: ', num2str(x), ', Y: ', num2str(y)]);
+global xA;
+global yA;
+global xB;
+global yB;
+global valueA;
+global valueB;
+global hdotA;
+global h;
+global hdotB;
+x = 0;
+y = 0;
+
+
+if (get(handles.showCategoryBtn,'Value') == 1)
+    if (get(handles.enterBtnA, 'Value') == 1)
+        pos = get(handles.mapDraw, 'currentpoint');% get mouse location on figure
+        xA = pos(1, 1)
+        yA = pos(1, 2)
+        poi = get_poi_by_coordinates(parsed_poi, xA, yA)
+        enterBtnA_Callback(hObject, eventdata, handles)
+    end
+    
+    
 end
 
+
+% if (get(handles.showCategoryBtn,'Value') == 1)
+%     if (get(handles.enterBtnA, 'Value') == 1)
+%                     m = get(handles.userEnterA, 'String')
+%         if strcmp(get(handles.userEnterA, 'String'), '') == 1
+% %             m = get(handles.userEnterA, 'String')
+%             if hdotA ~= 0
+%                 delete(hdotA)
+%                 hdotA = 0;
+%             end
+%         end
+%         pos = get(handles.mapDraw, 'currentpoint');% get mouse location on figure
+%         x = pos(1, 1);
+%         y = pos(1, 2);
+%         poi = get_poi_by_coordinates(parsed_poi, x, y)
+%         if poi.id ~= 0
+%             set(handles.userEnterA, 'String', poi.name)
+%             xA = poi.xy(1);
+%             yA = poi.xy(2);
+%             if hdotA ~= 0
+%                 delete(hdotA)
+%                 hold (h, 'on')
+%                 hdotA = plot(h, xA,yA, 'o','MarkerEdgeColor','k','MarkerFaceColor','r', 'MarkerSize',10);
+%                 hold (h, 'off')
+%             else
+%                 hold (h, 'on')
+%                 hdotA = plot(h, xA,yA, 'o','MarkerEdgeColor','k','MarkerFaceColor','r', 'MarkerSize',10);
+%                 hold (h, 'off')
+%             end
+%         end
+% %     else
+% %         warn(8);
+%     else
+%         m = set(handles.userEnterA, 'String', '');
+%     end
+%    
+%     if (get(handles.enterBtnB, 'Value') == 1)
+%         pos = get(handles.mapDraw, 'currentpoint');% get mouse location on figure
+%         x = pos(1, 1);
+%         y = pos(1, 2);
+%         poi = get_poi_by_coordinates(parsed_poi, x, y);
+% %     else
+% %         warn(8);
+%     end
+%     if (get(handles.listBtnA, 'Value') == 1)
+%         pos = get(handles.mapDraw, 'currentpoint');% get mouse location on figure
+%         x = pos(1, 1);
+%         y = pos(1, 2);
+%         poi = get_poi_by_coordinates(parsed_poi, x, y);
+%         if get(handles.categoryMenuA, 'Value') == 1
+%             if hdotA ~= 0
+%                 delete(hdotA)
+%             end
+%         end
+% %     else
+% %         warn(8); 
+%     end
+%     if (get(handles.listBtnB, 'Value') == 1)
+%         pos = get(handles.mapDraw, 'currentpoint');% get mouse location on figure
+%         x = pos(1, 1);
+%         y = pos(1, 2);
+%         poi = get_poi_by_coordinates(parsed_poi, x, y);
+% %     else
+% %         warn(8);
+%     end
+% %     if (get(handles.mapBtnA, 'Value') == 1)
+% %         pos = get(handles.mapDraw, 'currentpoint');% get mouse location on figure
+% %         x = pos(1, 1);
+% %         y = pos(1, 2);
+% %         poi = get_poi_by_coordinates(parsed_poi, x, y);
+% % %     else
+% % %         warn(8);
+% %     end
+% %     if (get(handles.mapBtnB, 'Value') == 1)
+% %         pos = get(handles.mapDraw, 'currentpoint');% get mouse location on figure
+% %         x = pos(1, 1);
+% %         y = pos(1, 2);
+% %         poi = get_poi_by_coordinates(parsed_poi, x, y);
+% % %     else
+% % %         warn(8);
+% %     end
+%     %set(handles.lbl_last_action, 'string', ['Mouse pressed @ X: ', num2str(x), ', Y: ', num2str(y)]);
+% end
+if (get(handles.showBtnA,'Value') == 1)
+    pos = get(handles.mapDraw, 'currentpoint');% get mouse location on figure
+    xA = pos(1, 1)
+    yA = pos(1, 2)
+    poi = get_poi_by_coordinates(parsed_poi, xA, yA)
+    set(handles.showBtnA,'Value', 0);
+    showBtnA_Callback(hObject, eventdata, handles);
+end
+if (get(handles.showBtnB,'Value') == 1)
+    pos = get(handles.mapDraw, 'currentpoint');% get mouse location on figure
+    xB = pos(1, 1)
+    yB = pos(1, 2)
+    poi = get_poi_by_coordinates(parsed_poi, xB, yB)
+    set(handles.showBtnB,'Value', 0);
+    showBtnB_Callback(hObject, eventdata, handles);
+end
+
+% --- Executes during object creation, after setting all properties.
+function showBtnB_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to showBtnB (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
