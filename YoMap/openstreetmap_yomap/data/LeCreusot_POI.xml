@@ -9,7 +9,7 @@
 	<category id="7" name="Bakery" icon="bakery" />
 	<category id="8" name="Laundry" icon="laundry" />
 	<category id="9" name="Hairdresser" icon="hairdresser" />
-	<category id="10" name="Bar" icon="beer" />
+	<category id="10" name="Bar" icon="bar" />
 	<category id="11" name="Café" icon="cafe" />	
 	<category id="12" name="Education" icon="college" />
 	<category id="13" name="Library" icon="library" />
