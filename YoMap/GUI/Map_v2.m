@@ -899,6 +899,10 @@ if get(handles.enterBtnA, 'Value') == 1
             set(handles.drawBtnA, 'Value', 0);
         end
     end
+        if flag_point_A == 1
+        delete(hdotA);
+        flag_point_A = 0;
+    end
     userEnterA_Callback(hObject, eventdata, handles)
 else
     set(handles.userEnterA, 'Enable', 'off');
@@ -922,6 +926,7 @@ global hdotA;
 global cat;
 global xA;
 global yA;
+global flag_point_A;
 if get(handles.listBtnA, 'Value')
     set(handles.enterBtnA, 'Value', 0);
     set(handles.mapBtnA, 'Value', 0);
@@ -943,12 +948,17 @@ if get(handles.listBtnA, 'Value')
     set(handles.tXA, 'Visible', 'off');
     set(handles.tYA, 'Visible', 'off');
     if (get(handles.drawBtnA, 'Value') == 1)
-        if hdotA == 0
+        if flag_point_A == 0
             set(handles.drawBtnA, 'Value', 0);
         else
             delete(hdotA);
+            flag_point_A = 0;
             set(handles.drawBtnA, 'Value', 0);
         end
+    end
+        if flag_point_A == 1
+        delete(hdotA);
+        flag_point_A = 0;
     end
 else
     set(handles.categoryMenuA, 'Visible', 'off');
@@ -957,6 +967,10 @@ else
     set(handles.userEnterA, 'Visible', 'on');
     set(handles.userEnterA, 'Enable', 'off');
     set(handles.userEnterA, 'String', '');
+    if flag_point_A == 1
+        delete(hdotA); 
+        flag_point_A = 0;
+    end
 end
 
 % --- Executes on button press in prefBtnA.
@@ -969,6 +983,9 @@ function mapBtnA_Callback(hObject, eventdata, handles)
 global hdotA;
 global categoryA;
 global poiA;
+global flag_point_A;
+global xA;
+global yA;
 if get(handles.mapBtnA, 'Value')
     set(handles.enterBtnA,  'Value', 0);
     set(handles.listBtnA,  'Value', 0);
@@ -985,7 +1002,12 @@ if get(handles.mapBtnA, 'Value')
     set(handles.coordYA, 'String', '');
     categoryA = 1;
     poiA = 1;
-    
+    xA = 0;
+    yA = 0;
+    if flag_point_A == 1
+        delete(hdotA);
+        flag_point_A = 0;
+    end
     set(handles.categoryMenuA, 'Visible', 'off');
     set(handles.poiMenuA, 'Visible', 'off')
     set(handles.userEnterA, 'Visible', 'off');
@@ -998,14 +1020,18 @@ else
     set(handles.tXA, 'Visible', 'off');
     set(handles.tYA, 'Visible', 'off');
     if (get(handles.drawBtnA, 'Value') == 1)
-        if hdotA == 0
+        if flag_point_A == 0
             set(handles.drawBtnA, 'Value', 0);
         else
             delete(hdotA);
+            flag_point_A = 0;
             set(handles.drawBtnA, 'Value', 0);
         end
     end
-    
+    if flag_point_A == 1
+        delete(hdotA);
+        flag_point_A = 0;
+    end
     set(handles.userEnterA, 'Visible', 'on');
     set(handles.userEnterA, 'Enable', 'off');
     set(handles.userEnterA, 'String', '');
@@ -1761,6 +1787,7 @@ global xA;
 global yA;
 global hdotA;
 global point_choosed;
+global flag_point_A;
 if (get(handles.drawBtnA, 'Value') == 1 & hdotA == 0)
     set(handles.drawBtnA, 'Value', 0);
 end
@@ -1771,7 +1798,6 @@ end
 % % if get(handles.showBtnA, 'Value') == 1
 % %     [xA, yA] = map_WindowButtonDownFcn(hObject, eventdata, handles)
 % %     set(handles.showBtnA, 'Value', 0)
-% % end
 
 x = num2str(xA);
 y = num2str(yA);
@@ -1799,15 +1825,25 @@ global xA;
 global yA;
 global h;
 global hdotA;
+global flag_point_A ;
 %if (strcmp(get(handles.coordXA, 'String'),'') == 0 & strcmp(get(handles.coordYA, 'String'),'') == 0)
 if (get(handles.drawBtnA, 'Value') == 1)
-    hold (h, 'on')
-    hdotA = plot(h, xA,yA, 'o','MarkerEdgeColor','k','MarkerFaceColor','r', 'MarkerSize',10);
-    hold (h, 'off')
+    if flag_point_A == 1
+        delete(hdotA);
+        hdotA = draw_point(h, xA,yA, 0);
+        flag_point_A = 1;
+    else
+        hdotA = draw_point(h, xA,yA, 0);
+        flag_point_A = 1;
+    end
 end
 if (get(handles.drawBtnA, 'Value') == 0)
-    delete(hdotA);
-    hdotA
+    if flag_point_A == 1
+        delete(hdotA);
+        flag_point_A = 0;
+    else
+        flag_point_A = 0;
+    end
 end
 %end
 
@@ -2615,6 +2651,7 @@ global valueB;
 global hdotA;
 global h;
 global hdotB;
+global flag_point_A;
 x = 0;
 y = 0;
 
@@ -2625,7 +2662,17 @@ if (get(handles.showCategoryBtn,'Value') == 1)
         xA = pos(1, 1)
         yA = pos(1, 2)
         poi = get_poi_by_coordinates(parsed_poi, xA, yA)
-        enterBtnA_Callback(hObject, eventdata, handles)
+        if poi.id ~= 0
+            set(handles.userEnterA, 'String', poi.name);
+            if flag_point_A == 0
+                hdotA = draw_point(h, xA, yA, 0);
+                flag_point_A = 1;
+            else
+                delete(hdotA)
+                hdotA = draw_point(h, xA, yA, 0);
+                flag_point_A = 1;
+            end
+        end
     end
     
     
