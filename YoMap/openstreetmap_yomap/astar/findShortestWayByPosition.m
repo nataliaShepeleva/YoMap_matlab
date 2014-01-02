@@ -28,7 +28,7 @@ function [ Optimal_path ] = findShortestWayByPosition( parsed_osm,start_x,start_
     %Add fake connections from start point to nodes of closest segment
     wayID = parsed_osm.segments.way_id(iS_start);
     wayPos = find(parsed_osm.way.id(:)==wayID);
-    [key tg] = get_way_tags(parsed_osm.way.tag{1,wayPos});
+    [key,val] = get_way_tags(parsed_osm.way.tag{1,wayPos});
     flag_start_segment_oneway=0;
     ind=find(ismember(key,{'oneway'}));
     if ~isempty(ind)
@@ -83,7 +83,7 @@ function [ Optimal_path ] = findShortestWayByPosition( parsed_osm,start_x,start_
     %Add fake connections from end node segments to end point
     wayID = parsed_osm.segments.way_id(iS_end);
     wayPos = find(parsed_osm.way.id(:)==wayID);
-    [key val] = get_way_tags(parsed_osm.way.tag{1,wayPos});
+    [key,val] = get_way_tags(parsed_osm.way.tag{1,wayPos});
     flag_end_segment_oneway=0;
     ind=find(ismember(key,{'oneway'}));
     if ~isempty(ind)

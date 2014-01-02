@@ -25,8 +25,8 @@ function [ Optimal_path, start_end_points ] = findShortestWayInRadius( parsed_os
     
     start_pos = [start_x;start_y];
     
-    dist = zeros(size(poi_ids));
-    routes = cell(size(poi_ids));
+    dist = zeros(size(poi_ids,1));
+    routes = cell(size(poi_ids,1));
     for ii=1:size(poi_ids)       
        routes(ii) = {findShortestWayByPosition(parsed_osm,start_pos(1,1),start_pos(2,1),poi_loc(1,ii),poi_loc(2,ii),mode)};
        dist(ii) =  calc_distance_route(routes{ii});
@@ -42,7 +42,12 @@ function [ Optimal_path, start_end_points ] = findShortestWayInRadius( parsed_os
         routes = routes(dist_ok);
         poi_loc = poi_loc(:,dist_ok);
         [min_v,min_i] = min(dist);
-        Optimal_path = routes{min_i}; 
-        start_end_points = [poi_loc(1,min_i) start_x;poi_loc(2,min_i) start_y];
+        if min_v<max_rad
+            Optimal_path = routes{min_i}; 
+            start_end_points = [poi_loc(1,min_i) start_x;poi_loc(2,min_i) start_y];
+        else
+            Optimal_path = [start_x;start_y];
+            start_end_points = [start_x start_x;start_y start_y];            
+        end
     end
 end

@@ -5,5 +5,5 @@ function [ distance ] = calc_air_distance_byPoint( A,B )
     %http://en.wikipedia.org/wiki/Haversine_formula
     %http://andrew.hedges.name/experiments/haversine/
 %   Convert degree to radians
-distance = calc_air_distance(A(1),A(2),B(1),B(2));
+distance = calc_air_distance(A(1,:),A(2,:),B(1,:),B(2,:));
 end
