@@ -1,6 +1,13 @@
 function [ Optimal_path ] = findShortestWayByPosition( parsed_osm,start_x,start_y,end_x,end_y,mode)
 %FINDSHORTESTWAY Summary of this function goes here
-%   Detailed explanation goes here
+%   parsed_osm - data about roads
+%   start_x - start x coordinate
+%   start_y - start y coordinate
+%   end_x - start x coordinate
+%   end_y - start y coordinate
+%   mode - type of transportation (1-car, 2-foot)
+%   RETURN: 
+%   Optimal_path - optimal path (from last to first point)
 
     [iS_start,pointOfContact_start] = find_closest_segment(parsed_osm.node,parsed_osm.segments,mode,start_x,start_y);
     [iS_end,pointOfContact_end] = find_closest_segment(parsed_osm.node,parsed_osm.segments,mode,end_x,end_y);

@@ -22,7 +22,7 @@ function varargout = Map_v2(varargin)
 
 % Edit the above text to modify the response to help Map_v2
 
-% Last Modified by GUIDE v2.5 30-Dec-2013 02:08:53
+% Last Modified by GUIDE v2.5 02-Jan-2014 10:12:20
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -2762,11 +2762,6 @@ global h;
 global hdotB;
 global flag_point_A;
 global flag_point_B;
-xA = 0;
-yA = 0;
-xB = 0;
-yB = 0;
-
 
 if (get(handles.showBtnA,'Value') == 1)
     pos = get(handles.mapDraw, 'currentpoint');% get mouse location on figure
@@ -2912,7 +2907,10 @@ if (get(handles.showBtnB,'Value') == 1)
         end
     end
 end
-
+xA
+yA
+xB
+yB
 
 
 
@@ -2933,4 +2931,6 @@ function deleteBtn_Callback(hObject, eventdata, handles)
     set(handles.addPoint, 'Visible', 'on');
     set(handles.inOrder, 'Visible', 'off');
     set(handles.deleteBtn, 'Visible', 'off');
+
+
 

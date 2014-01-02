@@ -1,0 +1,108 @@
+function [ Optimal_path, start_end_points ] = findShortestWayInRadius( parsed_osm,parsed_poi,start_x,start_y,cat_id,max_rad,mode)
+%findShortestWayInRadius Finds the shortest way from A to a shop in some
+%category
+%   parsed_osm - data about roads
+%   parsed_poi - data about poi
+%   start_x - start x coordinate
+%   start_y - start y coordinate
+%   cat_id - id of category we want the shop to be in
+%   max_rad - max distance of the road
+%   mode - type of transportation
+
+    
+    % Find closest segment for start
+    [iS_start,pointOfContact_start] = find_closest_segment(parsed_osm.node,parsed_osm.segments,mode,start_x,start_y);
+
+    poi_ids = get_ids_of_poi_by_category_id(parsed_poi,cat_id);
+    poi_loc = parsed_poi.poi.xy(:,poi_ids);
+    
+    poi_dist = calc_air_distance(pointOfContact_start(1),pointOfContact_start(2),poi_loc(1,:),poi_loc(2,:));
+    poi_ids = poi_ids(poi_dist<max_rad);
+    poi_loc = parsed_poi.poi.xy(:,poi_ids);
+    
+    start_pos = [start_x;start_y];
+    
+    distance = zeros(size(poi_ids));
+    routes = cell(size(poi_ids));
+    for ii=1:size(poi_ids)       
+       routes(ii) = {findShortestWayByPosition(parsed_osm,start_pos(1,1),start_pos(2,1),poi_loc(1,ii),poi_loc(2,ii),mode)};
+       distance(ii) =  calc_distance_route(routes{ii});
+    end
+    
+    %get possible distances
+    dist_ok = distance>0;
+    if isempty(dist_ok)
+        Optimal_path = [start_x;start_y];
+        start_end_points = [start_x start_x;start_y start_y];
+    else
+        distance = distance(dist_ok);
+        routes = routes(dist_ok);
+        poi_loc = poi_loc(:,dist_ok);
+        [min_v,min_i] = min(distance);
+        Optimal_path = routes{min_i}; 
+        start_end_points = [poi_loc(1,min_i) start_x;poi_loc(2,min_i) start_y];
+    end
+
+    
+%     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%     %%SNAP END POINT
+%     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
+%     %Add fake connections from end node segments to end point
+%     wayID = parsed_osm.segments.way_id(iS_end);
+%     wayPos = find(parsed_osm.way.id(:)==wayID);
+%     [key val] = get_way_tags(parsed_osm.way.tag{1,wayPos});
+%     flag_end_segment_oneway=0;
+%     ind=find(ismember(key,{'oneway'}));
+%     if ~isempty(ind)
+%         if (strcmp(val(1,ind), 'yes') || strcmp(val(1,ind), '-1'))
+%             flag_end_segment_oneway=1;
+%             %only segment from start to B
+%             parsed_osm.segments.way_id(nSegments) = parsed_osm.segments.way_id(wayPos);
+%             parsed_osm.segments.start(nSegments) = parsed_osm.segments.start(iS_end);
+%             parsed_osm.segments.end(nSegments) = 1;
+%             parsed_osm.segments.start_pos(nSegments) = parsed_osm.segments.start_pos(iS_end);
+%             parsed_osm.segments.end_pos(nSegments) = nNodes+2;
+%             parsed_osm.segments.distance(nSegments) = calc_air_distance_byID(parsed_osm.node,nNodes+2,parsed_osm.segments.start_pos(nSegments));
+%             parsed_osm.segments.roadtype(nSegments) = parsed_osm.segments.roadtype(iS_end);
+%             parsed_osm.segments.access(nSegments) = parsed_osm.segments.access(iS_end);
+%             
+%             temp_seg = parsed_osm.node.outgoing_segments{parsed_osm.segments.start_pos(iS_end)};
+%             temp_seg(1,size(temp_seg,2)+1)= nSegments;
+%             parsed_osm.node.outgoing_segments{parsed_osm.segments.start_pos(iS_end)} = temp_seg;
+%             nSegments = nSegments+1;            
+%         end
+%     end
+%     if flag_end_segment_oneway==0
+%         
+%         %START-> SegmentPoint B
+%         parsed_osm.segments.way_id(nSegments) = parsed_osm.segments.way_id(wayPos);
+%         parsed_osm.segments.start(nSegments) = parsed_osm.segments.start(iS_end);
+%         parsed_osm.segments.end(nSegments) = 1;
+%         parsed_osm.segments.start_pos(nSegments) = parsed_osm.segments.start_pos(iS_end);
+%         parsed_osm.segments.end_pos(nSegments) = nNodes+2;
+%         parsed_osm.segments.distance(nSegments) = calc_air_distance_byID(parsed_osm.node,nNodes+2,parsed_osm.segments.start_pos(nSegments));
+%             parsed_osm.segments.roadtype(nSegments) = parsed_osm.segments.roadtype(iS_end);
+%             parsed_osm.segments.access(nSegments) = parsed_osm.segments.access(iS_end);
+%         
+%         temp_seg = parsed_osm.node.outgoing_segments{parsed_osm.segments.start_pos(iS_end)};
+%         temp_seg(1,size(temp_seg,2)+1)= nSegments;
+%         parsed_osm.node.outgoing_segments{parsed_osm.segments.start_pos(iS_end)} = temp_seg;
+%         nSegments = nSegments+1;
+%         
+%         %Start -> SegmentPoint A
+%         parsed_osm.segments.way_id(nSegments) = parsed_osm.segments.way_id(wayPos);
+%         parsed_osm.segments.start(nSegments) = parsed_osm.segments.end(iS_end);
+%         parsed_osm.segments.end(nSegments) = 1;
+%         parsed_osm.segments.start_pos(nSegments) = parsed_osm.segments.end_pos(iS_end);
+%         parsed_osm.segments.end_pos(nSegments) = nNodes+2;
+%         parsed_osm.segments.distance(nSegments) = calc_air_distance_byID(parsed_osm.node,nNodes+2,parsed_osm.segments.start_pos(nSegments));
+%             parsed_osm.segments.roadtype(nSegments) = parsed_osm.segments.roadtype(iS_end);
+%             parsed_osm.segments.access(nSegments) = parsed_osm.segments.access(iS_end);
+%         
+%         temp_seg = parsed_osm.node.outgoing_segments{parsed_osm.segments.end_pos(iS_end)};
+%         temp_seg(1,size(temp_seg,2)+1)= nSegments;
+%         parsed_osm.node.outgoing_segments{parsed_osm.segments.end_pos(iS_end)} = temp_seg;
+%         
+%     end
+  
+%Optimal_path = findShortestWay(parsed_osm,mode,0,1);

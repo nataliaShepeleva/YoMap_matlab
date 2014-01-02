@@ -1,6 +1,11 @@
 function [ Optimal_path ] = findShortestWay( parsed_osm,mode,startNodeID, targetNodeID )
 %FINDSHORTESTWAY Summary of this function goes here
-%   Detailed explanation goes here
+%   parsed_osm - data about roads
+%   mode - type of transportation (1-car, 2-foot)
+%   startNodeID - start node in parsed osm
+%   targetNodeID - end node in parsed osm
+%   RETURN: 
+%   Optimal_path - optimal path (from last to first point)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %LISTS USED FOR ALGORITHM
@@ -43,9 +48,6 @@ while((currentNode ~= targetNode) && NoPath == 1)
 
  %UPDATE LIST OPEN WITH THE SUCCESSOR NODES
  %OPEN LIST FORMAT
-  %-----------------2------3-------4--------------5----------6-----7------8--
- %IS ON LIST 1/0 |X val |Y val |Parent X val |Parent Y val |h(n) |g(n)|f(n)|
- %--------------------------------------------------------------------------
  %------------------2----------3---------4------5---6-----------------------
  %IS ON LIST 1/0 |NodeId |ParentNodeId |h(n) |g(n)|f(n)|
  %--------------------------------------------------------------------------

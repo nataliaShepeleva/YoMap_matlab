@@ -9,7 +9,7 @@ map_img_filename = 'data/map20000.png'; % image file saved from online, if avail
 %% convert XML -> MATLAB struct 
 %read and save to parsed_osm_filename
 [parsed_osm, osm_xml] = parse_openstreetmap(openstreetmap_filename,parsed_osm_filename,2);
-[parsed_poi] = parse_poi_xml(poi_filename,parsed_poi_filename,1);
+[parsed_poi] = parse_poi_xml(poi_filename,parsed_poi_filename,2);
 %% plot
 %global figure
 fig = figure;
@@ -27,6 +27,7 @@ plot_way(ax, parsed_osm)
 points = [x(2) x(1); y(2) y(1)]
 
 %% plot routelayer
-route = findShortestWayByPosition(parsed_osm,x(1),y(1),x(2),y(2),2);
+%route = findShortestWayByPosition(parsed_osm,x(1),y(1),x(2),y(2),2);
+[route,points] = findShortestWayInRadius(parsed_osm,parsed_poi,x(1),y(1),2,3.5,2);
 plot_optimal_route(ax, route, points, parsed_osm);
 

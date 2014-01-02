@@ -1,6 +1,13 @@
 function [ iSeg, point_of_contact ] = find_closest_segment( parsed_nodes, parsed_segments,mode, p_x,p_y )
 %FIND_CLOSEST_SEGMENT Summary of this function goes here
-%   Detailed explanation goes here
+%   parsed_nodes - data about nodes
+%   parsed_segments - data about segments
+%   mode - type of transportation (1-car, 2-foot)
+%   p_x - start x coordinate
+%   y_y - start y coordinate
+%   RETURN: 
+%   iSeg - index of closest segment
+%   point_of_contact - projection of point on the segment
 
 %Get Position of all segments start and end points
 A(1,:) = parsed_nodes.xy(1,parsed_segments.start_pos(:));
