@@ -1,14 +1,15 @@
 %% name file
-openstreetmap_filename = 'data/LeCreusotWaysFF.osm'; %'osm file with data';
-parsed_osm_filename = 'data/LeCreusotWaysFF.mat'; %'osm file with data';
-poi_filename = 'data/LeCreusot_POI.xml'; %'osm file with data';
-parsed_poi_filename = 'data/LeCreusot_POI.mat'; %'osm file with data';
-map_img_filename = 'data/map20000.png'; % image file saved from online, if available
+dir_path = 'E:\Developing\Vibot\SE\GIT\YoMap_matlab\YoMap';
 
+openstreetmap_filename = 'LeCreusotWaysFF.osm';%'genoa.osm';
+parsed_osm_filename = 'LeCreusotWaysFF.mat'; %'osm file with data';
+map_img_filename = 'map40000.png'; % image file saved from online, if available
+poi_filename = 'LeCreusot_POI.xml'; %'osm file with data';
+parsed_poi_filename = 'LeCreusot_POI.mat'; %'osm file with data';
 
 %% convert XML -> MATLAB struct 
 %read and save to parsed_osm_filename
-[parsed_osm, osm_xml] = parse_openstreetmap(openstreetmap_filename,parsed_osm_filename,2);
+[parsed_osm, osm_xml] = parse_openstreetmap(dir_path,openstreetmap_filename,parsed_osm_filename,2);
 [parsed_poi] = parse_poi_xml(poi_filename,parsed_poi_filename,2);
 %% plot
 %global figure

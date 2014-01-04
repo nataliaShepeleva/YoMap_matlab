@@ -100,7 +100,6 @@ global route;
 global h;
 global points;
 global parsed_poi;
-global map_img_filename;
 
 valueA = '';
 valueB = '';
@@ -130,9 +129,7 @@ route = 0;
 
 %   Path to dir where project is!
 %   needed because of saving variables
-%dir_path = 'E:\Developing\Vibot\SE\GIT\YoMap_matlab\YoMap';
-
-dir_path = 'C:\Users\clu\Documents\GitHub\YoMap_matlab\YoMap'
+dir_path = 'E:\Developing\Vibot\SE\GIT\YoMap_matlab\YoMap';
 
 openstreetmap_filename = 'LeCreusotWaysFF.osm';%'genoa.osm';
 parsed_osm_filename = 'LeCreusotWaysFF.mat'; %'osm file with data';
@@ -141,7 +138,7 @@ poi_filename = 'LeCreusot_POI.xml'; %'osm file with data';
 parsed_poi_filename = 'LeCreusot_POI.mat'; %'osm file with data';
 
 [parsed_osm, osm_xml] = parse_openstreetmap(dir_path,openstreetmap_filename,parsed_osm_filename,2);
-[parsed_poi] = parse_poi_xml(dir_path,poi_filename,parsed_poi_filename,2);
+[parsed_poi] = parse_poi_xml(fullfile(dir_path,'data',poi_filename),fullfile(dir_path,'data',parsed_poi_filename),2);
 cat = ['choose category', parsed_poi.category.name];
 %hshowMap = show_map(h, bounds, map_img_filename);
 %plot_way(h, parsed_osm, map_img_filename);

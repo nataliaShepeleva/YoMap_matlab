@@ -1,4 +1,4 @@
-function [parsed_osm, osm_xml] = parse_openstreetmap(openstreetmap_filename,parsed_osm_filename,fromMat)
+function [parsed_osm, osm_xml] = parse_openstreetmap(dir_path,openstreetmap_filename,parsed_osm_filename,fromMat)
 %PARSE_OPENSTREETMAP    parse an OpenStreetMap XML file (OSM XML)
 %   [parsed_osm] = PARSE_OPENSTREETMAP(openstreetmap_filename) Parses an
 %   OpenStreetMap XML file saved from:
@@ -49,7 +49,7 @@ else
     osm_xml = map_osm.osm;
     parsed_osm = parse_osm_modified(osm_xml);
     if fromMat==1
-        save(parsed_osm_filename,'parsed_osm');
+        save(fullfile(dir_path,'data',parsed_osm_filename),'parsed_osm');
     end    
 end
 

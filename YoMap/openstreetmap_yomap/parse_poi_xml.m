@@ -1,4 +1,4 @@
-function [ parsed_poi ] = parse_poi_xml( poi_data_filename, parsed_poi_filename, fromMat )
+function [ parsed_poi ] = parse_poi_xml( dir_path,poi_data_filename, parsed_poi_filename, fromMat )
 %PARSE_POI_DATA Summary of this function goes here
 %   Detailed explanation goes here
 %==2 - load parsed matlab .mat
@@ -11,7 +11,7 @@ else
     poi_xml = poi_xml.data;
     parsed_poi = parse_poi_data(poi_xml);
     if fromMat==1
-        save(parsed_poi_filename,'parsed_poi');
+        save(fullfile(dir_path,'data',parsed_poi_filename),'parsed_poi');
     end    
 end
 
