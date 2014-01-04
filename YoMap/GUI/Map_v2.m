@@ -100,6 +100,7 @@ global route;
 global h;
 global points;
 global parsed_poi;
+global map_img_filename;
 
 valueA = '';
 valueB = '';
@@ -129,7 +130,9 @@ route = 0;
 
 %   Path to dir where project is!
 %   needed because of saving variables
-dir_path = 'E:\Developing\Vibot\SE\GIT\YoMap_matlab\YoMap';
+%dir_path = 'E:\Developing\Vibot\SE\GIT\YoMap_matlab\YoMap';
+
+dir_path = 'C:\Users\clu\Documents\GitHub\YoMap_matlab\YoMap'
 
 openstreetmap_filename = 'LeCreusotWaysFF.osm';%'genoa.osm';
 parsed_osm_filename = 'LeCreusotWaysFF.mat'; %'osm file with data';
