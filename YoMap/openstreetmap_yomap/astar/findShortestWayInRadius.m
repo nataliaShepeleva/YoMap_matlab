@@ -1,4 +1,4 @@
-function [ Optimal_path, start_end_points ] = findShortestWayInRadius( parsed_osm,parsed_poi,start_x,start_y,cat_id,max_rad,mode)
+function [ Optimal_path, start_end_points,poi ] = findShortestWayInRadius( parsed_osm,parsed_poi,start_x,start_y,cat_id,max_rad,mode)
 %findShortestWayInRadius Finds the shortest way from A to a shop in some
 %category
 %   parsed_osm - data about roads
@@ -11,7 +11,8 @@ function [ Optimal_path, start_end_points ] = findShortestWayInRadius( parsed_os
 %   RETURN: 
 %   Optimal_path - optimal path (from last to first point)
 %   start_end_points - end and start point of the road (points of contact)
-
+%   poi - returns information about POI that is at the end point (0 if
+%   search fails)
     
     % Find closest segment for start
     [iS_start,pointOfContact_start] = find_closest_segment(parsed_osm.node,parsed_osm.segments,mode,start_x,start_y);
@@ -37,17 +38,29 @@ function [ Optimal_path, start_end_points ] = findShortestWayInRadius( parsed_os
     if isempty(dist_ok)
         Optimal_path = [start_x;start_y];
         start_end_points = [start_x start_x;start_y start_y];
+        poi=0;
     else
         dist = dist(dist_ok);
         routes = routes(dist_ok);
         poi_loc = poi_loc(:,dist_ok);
+        poi_ids = poi_ids(dist_ok);
         [min_v,min_i] = min(dist);
         if min_v<max_rad
             Optimal_path = routes{min_i}; 
             start_end_points = [poi_loc(1,min_i) start_x;poi_loc(2,min_i) start_y];
+            %get info about POI
+            poi.id = parsed_poi.poi.id(1,poi_ids(min_i));
+            poi.cat_id = parsed_poi.poi.cat_id(1,poi_ids(min_i));
+            poi.xy = parsed_poi.poi.xy(:,poi_ids(min_i));
+            poi.name = parsed_poi.poi.name{1,poi_ids(min_i)};
+            poi.address = parsed_poi.poi.address{1,poi_ids(min_i)};
+            poi.photo_path = parsed_poi.poi.photo_path{1,poi_ids(min_i)};
+            poi.user = parsed_poi.poi.user{1,poi_ids(min_i)};
+            
         else
             Optimal_path = [start_x;start_y];
-            start_end_points = [start_x start_x;start_y start_y];            
+            start_end_points = [start_x start_x;start_y start_y];
+            poi=0;
         end
     end
 end
