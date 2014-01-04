@@ -45,6 +45,7 @@ function [ Optimal_path ] = findShortestWayByPosition( parsed_osm,start_x,start_
             parsed_osm.segments.access(nSegments) = parsed_osm.segments.access(iS_start);    
             temp_seg(1,1)= nSegments;
             parsed_osm.node.outgoing_segments{nNodes+1} = temp_seg;
+            nSegments = nSegments+1;
         end
     end
     if flag_start_segment_oneway==0
