@@ -11,5 +11,8 @@ if P == 1 % point B
     hold (ax, 'off')
 end
 if P == 3 % point C
+    hold (ax, 'on')
+    hand = plot(ax, x,y, 'o','MarkerEdgeColor','k','MarkerFaceColor','y', 'MarkerSize',10);
+    hold (ax, 'off') 
 end
     

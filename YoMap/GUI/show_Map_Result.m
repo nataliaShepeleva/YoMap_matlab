@@ -77,23 +77,6 @@ if category == 1
         end
     end
     flag = 1;
-%     hit_tester()
 end
-end
-% for any case if we need to know which mouse button ispressed
-
-% function hit_tester(varargin)
-% global h;
-% % Sample code for detecting which mouse button was pressed in a figure.
-% if nargin == 0
-%    % fig = figure;
-%     set(h, 'buttondownfcn', 'hit_tester(get(gcf, ''selectiontype''))');
-% else
-%     if nargin == 1
-%         button = varargin(1);
-%         disp(button);
-%         end
-% end
-% end
 
                 

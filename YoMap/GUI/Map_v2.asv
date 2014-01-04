@@ -654,63 +654,35 @@ if get(handles.radiusBtn, 'Value') == 0
                 warn(26);
             end 
             
-            if pA == 1 & pB == 1 & pC == 1
+            if pA == 1 & pC == 1
                 if transport ~= 0
                     [route,points] = findShortestWayInRadius(parsed_osm,parsed_poi,xA,yA,categoryC,radius,transport);
                    if route ~= 0
-                        if flag_point_A == 1 
-                            if flag_point_B == 1
-                                if flg == 1 & flag_point_C == 1  
-                                    delete(hdotA);
-                                    delete(hdotB);
-                                    delete(hdotC);
-                                    show_Map_Result(h, btnMap, btnRoads, btnWay, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
-                                    hdotA = draw_point(h, xA,yA, 0);
-                                    hdotB = draw_point(h, xB,yB, 1);
-                                    hdotC = draw_point(h, xC,yC, 3);
-                                else
-                                    delete(hdotA);
-                                    delete(hdotB);
-                                    show_Map_Result(h, btnMap, btnRoads, btnWay, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
-                                    hdotA = draw_point(h, xA,yA, 0);
-                                    hdotB = draw_point(h, xB,yB, 1);
-                                end
+                         if flag_point_A == 1 
+                            if flag_point_C == 1 
+                                delete(hdotA);
+                                delete(hdotC);
+                                set(handles.showWayBtn, 'Value', 1);
+                                show_Map_Result(h, btnMap, btnRoads, 1, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
+                                hdotA = draw_point(h, xA,yA, 0);
+                                hdotC = draw_point(h, xC,yC, 2);
                             else
-                                if flg == 1 & flag_point_C == 1 
-                                    delete(hdotA);
-                                    delete(hdotC);
-                                    show_Map_Result(h, btnMap, btnRoads, btnWay, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
-                                    hdotA = draw_point(h, xA,yA, 0);
-                                    hdotC = draw_point(h, xC,yC, 3);  
-                                else
-                                    delete(hdotA);
-                                    show_Map_Result(h, btnMap, btnRoads, btnWay, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
-                                    hdotA = draw_point(h, xA,yA, 0); 
-                                end
+                                delete(hdotA);
+                                set(handles.showWayBtn, 'Value', 1);
+                                show_Map_Result(h, btnMap, btnRoads, 1, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
+                                hdotA = draw_point(h, xA,yA, 0); 
                             end
                         else
-                            if flag_point_B == 1
-                                if flg == 1 & flag_point_C == 1 
-                                    delete(hdotB);
-                                    delete(hdotC);
-                                    show_Map_Result(h, btnMap, btnRoads, btnWay, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
-                                    hdotB = draw_point(h, xB,yB, 1);
-                                    hdotC = draw_point(h, xC,yC, 3); 
-                                else
-                                    delete(hdotB);
-                                    show_Map_Result(h, btnMap, btnRoads, btnWay, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
-                                    hdotB = draw_point(h, xB,yB, 1); 
-                                end
+                            if flag_point_C == 1
+                                delete(hdotC);
+                                set(handles.showWayBtn, 'Value', 1);
+                                show_Map_Result(h, btnMap, btnRoads, 1, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
+                                hdotC = draw_point(h, xC,yC, 2); 
                             else
-                                if flg == 1 & flag_point_C == 1 
-                                    delete(hdotC);
-                                    show_Map_Result(h, btnMap, btnRoads, btnWay, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
-                                    hdotC = draw_point(h, xC,yC, 3); 
-                                else
-                                    show_Map_Result(h, btnMap, btnRoads, btnWay, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
-                                end
+                                set(handles.showWayBtn, 'Value', 1);
+                                show_Map_Result(h, btnMap, btnRoads, 1, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
                             end
-                        end
+                         end
                      else
                         warn(6);
                      end
@@ -813,10 +785,12 @@ else
                             if flag_point_B == 1 
                                 delete(hdotA);
                                 delete(hdotB);
+                                delete(hdotC);
                                 set(handles.showWayBtn, 'Value', 1);
                                 show_Map_Result(h, btnMap, btnRoads, 1, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
                                 hdotA = draw_point(h, xA,yA, 0);
                                 hdotB = draw_point(h, xB,yB, 1);
+                                hdotC = draw_point(h, xB,yB, 1);
                             else
                                 delete(hdotA);
                                 set(handles.showWayBtn, 'Value', 1);
