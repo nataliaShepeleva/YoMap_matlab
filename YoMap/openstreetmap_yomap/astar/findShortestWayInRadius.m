@@ -21,7 +21,9 @@ function [ Optimal_path, start_end_points,poi ] = findShortestWayInRadius( parse
     poi_loc = parsed_poi.poi.xy(:,poi_ids);
     
     poi_dist = calc_air_distance(pointOfContact_start(1),pointOfContact_start(2),poi_loc(1,:),poi_loc(2,:));
-    poi_ids = poi_ids(poi_dist<max_rad);
+    if max_rad~=0
+        poi_ids = poi_ids(poi_dist<max_rad);
+    end
     poi_loc = parsed_poi.poi.xy(:,poi_ids);
     
     start_pos = [start_x;start_y];
@@ -45,7 +47,7 @@ function [ Optimal_path, start_end_points,poi ] = findShortestWayInRadius( parse
         poi_loc = poi_loc(:,dist_ok);
         poi_ids = poi_ids(dist_ok);
         [min_v,min_i] = min(dist);
-        if min_v<max_rad
+        if min_v<max_rad || max_rad==0
             Optimal_path = routes{min_i}; 
             start_end_points = [poi_loc(1,min_i) start_x;poi_loc(2,min_i) start_y];
             %get info about POI

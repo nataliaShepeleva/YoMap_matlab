@@ -28,7 +28,8 @@ points = [x(2) x(1); y(2) y(1)]
 
 %% plot routelayer
 %route = findShortestWayByPosition(parsed_osm,x(1),y(1),x(2),y(2),2);
-[route,points,POI] = findShortestWayInRadius(parsed_osm,parsed_poi,x(1),y(1),2,3.5,2);
-[route,points,POI] = findShortestItinerary(parsed_osm,parsed_poi,x(1),y(1),x(2),y(2),2,6,2);
+[route,points,POI] = findShortestWayInRadius(parsed_osm,parsed_poi,x(1),y(1),2,3,2);
+[route,points,POI] = findShortestWayInRadius(parsed_osm,parsed_poi,x(1),y(1),2,0,2);
+%[route,points,POI] = findShortestItinerary(parsed_osm,parsed_poi,x(1),y(1),x(2),y(2),2,6,2);
 plot_optimal_route(ax, route, points, parsed_osm);
 

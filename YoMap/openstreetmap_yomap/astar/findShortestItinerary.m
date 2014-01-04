@@ -30,7 +30,9 @@ function [ Optimal_path, start_end_points,poi ] = findShortestItinerary( parsed_
     poi_dist(2,:) = calc_air_distance_byPoint(poi_loc(:,:),pointOfContact_end);
     
     %sum of both parts has to be smaller than max radius
-    poi_ids = poi_ids(sum(poi_dist)<max_rad);
+    if max_rad~=0
+        poi_ids = poi_ids(sum(poi_dist)<max_rad);
+    end
     if ~isempty(poi_ids)
         poi_loc = parsed_poi.poi.xy(:,poi_ids);
     
@@ -54,7 +56,7 @@ function [ Optimal_path, start_end_points,poi ] = findShortestItinerary( parsed_
             routes = routes(:,dist_ok);
             poi_ids = poi_ids(dist_ok);
             [min_v,min_i] = min(sum(dist));
-            if min_v<max_rad
+            if min_v<max_rad || max_rad==0
                 Optimal_path = [routes{2,min_i} routes{1,min_i}]; 
                 start_end_points = [end_x start_x;end_y start_y];
                 %get info about middle point
