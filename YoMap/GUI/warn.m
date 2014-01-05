@@ -53,7 +53,7 @@ switch numb
     case 26 
         error = 'Choose any category for point C';
     case 27
-        error = 'Radius is choosen as default' 
+        error = 'Radius is choosen as default';
         
 end
 

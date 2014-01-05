@@ -1,35 +1,35 @@
-function varargout = Map_v2(varargin)
-% MAP_V2 MATLAB code for Map_v2.fig
-%      MAP_V2, by itself, creates a new MAP_V2 or raises the existing
+function varargout = Yomap(varargin)
+% YOMAP MATLAB code for Yomap.fig
+%      YOMAP, by itself, creates a new YOMAP or raises the existing
 %      singleton*.
 %
-%      H = MAP_V2 returns the handle to a new MAP_V2 or the handle to
+%      H = YOMAP returns the handle to a new YOMAP or the handle to
 %      the existing singleton*.
 %
-%      MAP_V2('CALLBACK',hObject,eventData,handles,...) calls the local
-%      function named CALLBACK in MAP_V2.M with the given input arguments.
+%      YOMAP('CALLBACK',hObject,eventData,handles,...) calls the local
+%      function named CALLBACK in YOMAP.M with the given input arguments.
 %
-%      MAP_V2('Property','Value',...) creates a new MAP_V2 or raises the
+%      YOMAP('Property','Value',...) creates a new YOMAP or raises the
 %      existing singleton*.  Starting from the left, property value pairs are
-%      applied to the GUI before Map_v2_OpeningFcn gets called.  An
+%      applied to the GUI before Yomap_OpeningFcn gets called.  An
 %      unrecognized property name or invalid value makes property application
-%      stop.  All inputs are passed to Map_v2_OpeningFcn via varargin.
+%      stop.  All inputs are passed to Yomap_OpeningFcn via varargin.
 %
 %      *See GUI Options on GUIDE's Tools menu.  Choose "GUI allows only one
 %      instance to run (singleton)".
 %
 % See also: GUIDE, GUIDATA, GUIHANDLES
 
-% Edit the above text to modify the response to help Map_v2
+% Edit the above text to modify the response to help Yomap
 
-% Last Modified by GUIDE v2.5 05-Jan-2014 14:25:49
+% Last Modified by GUIDE v2.5 05-Jan-2014 23:35:18
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
 gui_State = struct('gui_Name',       mfilename, ...
                    'gui_Singleton',  gui_Singleton, ...
-                   'gui_OpeningFcn', @Map_v2_OpeningFcn, ...
-                   'gui_OutputFcn',  @Map_v2_OutputFcn, ...
+                   'gui_OpeningFcn', @Yomap_OpeningFcn, ...
+                   'gui_OutputFcn',  @Yomap_OutputFcn, ...
                    'gui_LayoutFcn',  [] , ...
                    'gui_Callback',   []);
 if nargin && ischar(varargin{1})
@@ -46,15 +46,15 @@ end
 % End initialization code - DO NOT EDIT
 
 
-% --- Executes just before Map_v2 is made visible.
-function Map_v2_OpeningFcn(hObject, eventdata, handles, varargin)
+% --- Executes just before Yomap is made visible.
+function Yomap_OpeningFcn(hObject, eventdata, handles, varargin)
 % This function has no output args, see OutputFcn.
 % hObject    handle to figure
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-% varargin   command line arguments to Map_v2 (see VARARGIN)
+% varargin   command line arguments to Yomap (see VARARGIN)
 
-% Choose default command line output for Map_v2
+% Choose default command line output for Yomap
 handles.output = hObject;
 
 % Update handles structure
@@ -151,12 +151,12 @@ set(handles.showMapBtn, 'Value', 1);
 set(handles.showMapBtn, 'String', 'Hide map');
 set(handles.footBtn, 'Value', 1);
 
-% UIWAIT makes Map_v2 wait for user response (see UIRESUME)
+% UIWAIT makes Yomap wait for user response (see UIRESUME)
 % uiwait(handles.map);
 
 
 % --- Outputs from this function are returned to the command line.
-function varargout = Map_v2_OutputFcn(hObject, eventdata, handles) 
+function varargout = Yomap_OutputFcn(hObject, eventdata, handles) 
 % varargout  cell array for returning output args (see VARARGOUT);
 % hObject    handle to figure
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -204,8 +204,8 @@ global hdotA;
 global h;
 global flag_point_A;
 global resultA;
-valueA = get(handles.userEnterA,'String')
-resultA = get_poi_by_name_or_address(parsed_poi, valueA)
+valueA = get(handles.userEnterA,'String');
+resultA = get_poi_by_name_or_address(parsed_poi, valueA);
 if resultA.id ~= 0
     xA = resultA.xy(1);
     yA = resultA.xy(2);
@@ -213,7 +213,7 @@ if resultA.id ~= 0
         hdotA = draw_point(h, xA, yA, 0);
         flag_point_A = 1;
     else
-        delete(hdotA)
+        delete(hdotA);
         hdotA = draw_point(h, xA, yA, 0);
         flag_point_A = 1;
     end
@@ -258,8 +258,8 @@ global hdotB;
 global h;
 global flag_point_B;
 global resultB;
-valueB = get(handles.userEnterB,'String')
-resultB = get_poi_by_name_or_address(parsed_poi, valueB)
+valueB = get(handles.userEnterB,'String');
+resultB = get_poi_by_name_or_address(parsed_poi, valueB);
 if resultB.id ~= 0
     xB = resultB.xy(1);
     yB = resultB.xy(2);
@@ -293,38 +293,6 @@ function userEnterB_CreateFcn(hObject, eventdata, handles)
 %       See ISPC and COMPUTER.
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
-end
-
-
-% --- Executes on button press in busBtn.
-function busBtn_Callback(hObject, eventdata, handles)
-% hObject    handle to busBtn (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of busBtn
-global transport;
-if get(handles.busBtn, 'Value')
-    set(handles.footBtn, 'Value', 0);
-    set(handles.carBtn, 'Value', 0);
-    set(handles.bikeBtn, 'Value', 0);
-    transport = 4;
-end
-
-
-% --- Executes on button press in bikeBtn.
-function bikeBtn_Callback(hObject, eventdata, handles)
-% hObject    handle to bikeBtn (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of bikeBtn
-global transport;
-if get(handles.bikeBtn, 'Value')
-    set(handles.footBtn, 'Value', 0);
-    set(handles.carBtn, 'Value', 0);
-    set(handles.busBtn, 'Value', 0);
-    transport = 3;
 end
 
 
@@ -502,7 +470,7 @@ btnMap = get(handles.showMapBtn, 'Value');
 btnRoads = get(handles.showRoadsBtn, 'Value');
 btnCategory = get(handles.showCategoryBtn, 'Value');
 
-set(handles.tInstrOne, 'String', 'Insructions are here');
+set(handles.tInstrOne, 'String', '');
 set(handles.tInstrTwo, 'String', '');
 set(handles.tInstrThree, 'String', '');
 set(handles.tInstrFour, 'String', '');
@@ -776,9 +744,8 @@ if get(handles.radiusBtn, 'Value') == 0
                    [route,points,resultC] = findShortestItinerary(parsed_osm,parsed_poi,xA,yA,xB,yB,categoryC-1,distance,transport);
                     s = size(route);
                     if s(2) > 1
-                        resultC  
-                        xC = resultC.xy(1)
-                        yC = resultC.xy(2)
+                        xC = resultC.xy(1);
+                        yC = resultC.xy(2);
                         if resultA.id ~= 0
                             st1 = strcat('Name: ', resultA.name);
                             st2 = strcat('Address: ', resultA.address);
@@ -1038,7 +1005,6 @@ else
                     [route,points,resultC] = findShortestWayInRadius(parsed_osm,parsed_poi,xA,yA,categoryC-1,radius,transport);
                     s = size(route);
                     if s(2) > 1
-                        resultC
                       if resultA.id ~= 0
                                 st1 = strcat('Name: ', resultA.name);
                                 st2 = strcat('Address: ', resultA.address);
@@ -1181,10 +1147,10 @@ if (get(handles.radiusBtn,'Value') == 1)
         mapBtnB_Callback(hObject, eventdata, handles);
         xB = 0;
         yB = 0;
-        categoryB = 1
+        categoryB = 1;
         poiB = 1;
         valueB = '';
-        resultB.id = 0
+        resultB.id = 0;
         set(handles.userEnterB, 'String','');
         set(handles.categoryMenuB, 'Value',1);
         set(handles.poiMenuB, 'Value',1);
@@ -2141,9 +2107,9 @@ if get(handles.enterBtnA, 'Value') == 1
     
     
     if get(handles.showCategoryBtn, 'Value') == 1
-        set(handles.showBtnA, 'Visible', 'on')
+        set(handles.showBtnA, 'Visible', 'on');
     else
-        set(handles.showBtnA, 'Visible', 'off')
+        set(handles.showBtnA, 'Visible', 'off');
     end
     set(handles.userEnterA, 'Visible', 'on');
     set(handles.userEnterA, 'Enable', 'on');
@@ -2247,12 +2213,12 @@ if get(handles.listBtnA, 'Value')
     end
 else
     set(handles.categoryMenuA, 'Visible', 'off');
-    set(handles.poiMenuA, 'Visible', 'off')
+    set(handles.poiMenuA, 'Visible', 'off');
     
     set(handles.swapBtn, 'Visible', 'off');
     set(handles.userEnterA, 'Visible', 'on');
     set(handles.userEnterA, 'Enable', 'off');
-    set(handles.showBtnA, 'Visible', 'off')
+    set(handles.showBtnA, 'Visible', 'off');
     set(handles.userEnterA, 'String', '');
     if flag_point_A == 1
         delete(hdotA); 
@@ -2289,14 +2255,14 @@ if get(handles.mapBtnA, 'Value')
     
     set(handles.coordXA, 'Visible', 'on');
     set(handles.coordYA, 'Visible', 'on');
-    set(handles.showBtnA, 'Visible', 'on')
+    set(handles.showBtnA, 'Visible', 'on');
     set(handles.drawBtnA, 'Visible', 'on');
     set(handles.tXA, 'Visible', 'on');
     set(handles.tYA, 'Visible', 'on');
     set(handles.coordXA, 'Enable', 'on');
     set(handles.coordYA, 'Enable', 'on');
-    set(handles.coordXA, 'String', xA);
-    set(handles.coordYA, 'String', yA);
+    set(handles.coordXA, 'String', '0');
+    set(handles.coordYA, 'String', '0');
     categoryA = 1;
     poiA = 1;
     xA = 0;
@@ -2306,7 +2272,7 @@ if get(handles.mapBtnA, 'Value')
         flag_point_A = 0;
     end
     set(handles.categoryMenuA, 'Visible', 'off');
-    set(handles.poiMenuA, 'Visible', 'off')
+    set(handles.poiMenuA, 'Visible', 'off');
     set(handles.userEnterA, 'Visible', 'off');
     
 else
@@ -2364,9 +2330,9 @@ if get(handles.enterBtnB, 'Value') == 1
     end
     
     if get(handles.showCategoryBtn, 'Value') == 1
-        set(handles.showBtnB, 'Visible', 'on')
+        set(handles.showBtnB, 'Visible', 'on');
     else
-        set(handles.showBtnB, 'Visible', 'off')
+        set(handles.showBtnB, 'Visible', 'off');
     end
     set(handles.userEnterB, 'Visible', 'on');
     set(handles.userEnterB, 'Enable', 'on');
@@ -2382,7 +2348,7 @@ if get(handles.enterBtnB, 'Value') == 1
     set(handles.tXB, 'Visible', 'off');
     set(handles.tYB, 'Visible', 'off');
     set(handles.categoryMenuB, 'Visible', 'off');
-    set(handles.poiMenuB, 'Visible', 'off')
+    set(handles.poiMenuB, 'Visible', 'off');
     if (get(handles.drawBtnB, 'Value') == 1)
         if flag_point_B == 0
             set(handles.drawBtnB, 'Value', 0);
@@ -2445,9 +2411,9 @@ if get(handles.listBtnB, 'Value')
     set(handles.coordXB, 'Visible', 'off');
     set(handles.coordYB, 'Visible', 'off');
     if get(handles.showCategoryBtn, 'Value') == 1
-        set(handles.showBtnB, 'Visible', 'on')
+        set(handles.showBtnB, 'Visible', 'on');
     else
-        set(handles.showBtnB, 'Visible', 'off')
+        set(handles.showBtnB, 'Visible', 'off');
     end
     set(handles.drawBtnB, 'Visible', 'off');
     set(handles.tXB, 'Visible', 'off');
@@ -2469,7 +2435,7 @@ if get(handles.listBtnB, 'Value')
     end
 else
     set(handles.categoryMenuB, 'Visible', 'off');
-    set(handles.poiMenuB, 'Visible', 'off')
+    set(handles.poiMenuB, 'Visible', 'off');
     
     set(handles.userEnterB, 'Visible', 'on');
     set(handles.userEnterB, 'Enable', 'off');
@@ -2512,14 +2478,14 @@ if get(handles.mapBtnB, 'Value')
     
     set(handles.coordXB, 'Visible', 'on');
     set(handles.coordYB, 'Visible', 'on');
-    set(handles.showBtnB, 'Visible', 'on')
+    set(handles.showBtnB, 'Visible', 'on');
     set(handles.drawBtnB, 'Visible', 'on');
     set(handles.tXB, 'Visible', 'on');
     set(handles.tYB, 'Visible', 'on');
     set(handles.coordXB, 'Enable', 'on');
     set(handles.coordYB, 'Enable', 'on');
-    set(handles.coordXB, 'String', xB);
-    set(handles.coordYB, 'String', yB);
+    set(handles.coordXB, 'String', '0');
+    set(handles.coordYB, 'String', '0');
     categoryB = 1;
     poiB = 1;
     xB = 0;
@@ -2529,7 +2495,7 @@ if get(handles.mapBtnB, 'Value')
         flag_point_B = 0;
     end
     set(handles.categoryMenuB, 'Visible', 'off');
-    set(handles.poiMenuB, 'Visible', 'off')
+    set(handles.poiMenuB, 'Visible', 'off');
     set(handles.userEnterB, 'Visible', 'off');
     
 else
@@ -2610,7 +2576,7 @@ if (get(handles.enterBtnA, 'Value') == 1 & get(handles.enterBtnB, 'Value') == 1)
                 hdotA = draw_point(h,xA,yA,0);
                 hdotB = draw_point(h,xB,yB,1);
             else
-                searchBtn_Callback(hObject, eventdata, handles)
+                searchBtn_Callback(hObject, eventdata, handles);
             end
         else
             valueA = get(handles.userEnterA, 'String');
@@ -2635,7 +2601,7 @@ if (get(handles.enterBtnA, 'Value') == 1 & get(handles.enterBtnB, 'Value') == 1)
                 flag_point_A = 0;
                 flag_point_B = 1;
             else
-                searchBtn_Callback(hObject, eventdata, handles)
+                searchBtn_Callback(hObject, eventdata, handles);
             end
         end
     else
@@ -2662,7 +2628,7 @@ if (get(handles.enterBtnA, 'Value') == 1 & get(handles.enterBtnB, 'Value') == 1)
                 flag_point_A = 1;
                 flag_point_B = 0;
             else
-                searchBtn_Callback(hObject, eventdata, handles)
+                searchBtn_Callback(hObject, eventdata, handles);
             end
         else
             valueA = get(handles.userEnterA, 'String');
@@ -2682,7 +2648,7 @@ if (get(handles.enterBtnA, 'Value') == 1 & get(handles.enterBtnB, 'Value') == 1)
             resultB = k;
             
             if route ~= 0 
-                searchBtn_Callback(hObject, eventdata, handles)
+                searchBtn_Callback(hObject, eventdata, handles);
             end 
         end
     end
@@ -2731,10 +2697,10 @@ if (get(handles.listBtnA, 'Value') == 1 & get(handles.listBtnB, 'Value') == 1)
             set(handles.poiMenuB, 'Value', num);
             
 
-            categoryA = get(handles.categoryMenuA,'Value')
-            categoryB = get(handles.categoryMenuB,'Value')
-            poiA = get(handles.poiMenuA,'Value')
-            poiB = get(handles.poiMenuB,'Value')
+            categoryA = get(handles.categoryMenuA,'Value');
+            categoryB = get(handles.categoryMenuB,'Value');
+            poiA = get(handles.poiMenuA,'Value');
+            poiB = get(handles.poiMenuB,'Value');
             
             k = xA;
             xA = xB;
@@ -2748,7 +2714,7 @@ if (get(handles.listBtnA, 'Value') == 1 & get(handles.listBtnB, 'Value') == 1)
                 hdotA = draw_point(h,xA,yA,0);
                 hdotB = draw_point(h,xB,yB,1);
             else
-                searchBtn_Callback(hObject, eventdata, handles)
+                searchBtn_Callback(hObject, eventdata, handles);
             end
         else
             categoryA = get(handles.categoryMenuA,'Value');
@@ -2804,7 +2770,7 @@ if (get(handles.listBtnA, 'Value') == 1 & get(handles.listBtnB, 'Value') == 1)
                 flag_point_A = 0;
                 flag_point_B = 1;
             else
-                searchBtn_Callback(hObject, eventdata, handles)
+                searchBtn_Callback(hObject, eventdata, handles);
             end
         end
     else
@@ -2862,7 +2828,7 @@ if (get(handles.listBtnA, 'Value') == 1 & get(handles.listBtnB, 'Value') == 1)
                 flag_point_A = 1;
                 flag_point_B = 0;
             else
-                searchBtn_Callback(hObject, eventdata, handles)
+                searchBtn_Callback(hObject, eventdata, handles);
             end
         end
     end
@@ -2900,7 +2866,7 @@ if (get(handles.mapBtnA, 'Value') == 1 & get(handles.mapBtnB, 'Value') == 1)
                 hdotA = draw_point(h,xA,yA,0);
                 hdotB = draw_point(h,xB,yB,1);
             else
-                searchBtn_Callback(hObject, eventdata, handles)
+                searchBtn_Callback(hObject, eventdata, handles);
             end
         else
             valuexA = get(handles.coordXA, 'String');
@@ -2930,7 +2896,7 @@ if (get(handles.mapBtnA, 'Value') == 1 & get(handles.mapBtnB, 'Value') == 1)
                 flag_point_A = 0;
                 flag_point_B = 1;
             else
-                searchBtn_Callback(hObject, eventdata, handles)
+                searchBtn_Callback(hObject, eventdata, handles);
             end
         end
     else
@@ -2962,7 +2928,7 @@ if (get(handles.mapBtnA, 'Value') == 1 & get(handles.mapBtnB, 'Value') == 1)
                 flag_point_A = 1;
                 flag_point_B = 0;
             else
-                searchBtn_Callback(hObject, eventdata, handles)
+                searchBtn_Callback(hObject, eventdata, handles);
             end
         else
             valuexA = get(handles.coordXA, 'String');
@@ -2987,7 +2953,7 @@ if (get(handles.mapBtnA, 'Value') == 1 & get(handles.mapBtnB, 'Value') == 1)
                 end
             end
             if route ~= 0 
-                searchBtn_Callback(hObject, eventdata, handles)
+                searchBtn_Callback(hObject, eventdata, handles);
             end 
         end
     end
@@ -3343,11 +3309,13 @@ function hidePanel_Callback(hObject, eventdata, handles)
 if get(handles.hidePanel, 'Value')
     set(handles.uipanelMain, 'Visible', 'off');
     set(handles.uipanelInstr, 'Position', [0 0 1 0.075]);
-    set(handles.hidePanel, 'String', 'Show all')
+    set(handles.hidePanel, 'Position', [0.928 0.074 0.071 0.049]);
+    set(handles.hidePanel, 'String', 'Show all');
 else
     set(handles.uipanelMain, 'Visible', 'on');
     set(handles.uipanelInstr, 'Position', [0 0.148 1 0.075]); 
-    set(handles.hidePanel, 'String', 'Hide all')
+    set(handles.hidePanel, 'Position', [0.928 0.224 0.071 0.049]);
+    set(handles.hidePanel, 'String', 'Hide all');
 end
 
 
@@ -3370,7 +3338,7 @@ global categoryA;
 global resultA;
 poiA = get(handles.poiMenuA,'Value');
 if poiA-1 ~= 0
-    resultA = get_poi_by_id_from_category_id(parsed_poi,categoryA-1, poiA-1)
+    resultA = get_poi_by_id_from_category_id(parsed_poi,categoryA-1, poiA-1);
     xA = resultA.xy(1);
     yA = resultA.xy(2);
 else
@@ -4142,7 +4110,7 @@ global categoryC;
 global resultC;
 poiC = get(handles.poiMenuC,'Value');
 if poiC-1 ~= 0
-    resultC = get_poi_by_id_from_category_id(parsed_poi,categoryC-1, poiC-1)
+    resultC = get_poi_by_id_from_category_id(parsed_poi,categoryC-1, poiC-1);
     xC = resultC.xy(1);
     yC = resultC.xy(2);
 else
@@ -4184,7 +4152,7 @@ function categoryMenuC_Callback(hObject, eventdata, handles)
 global categoryC;
 % global parsed_poi;
 % 
-categoryC = get(handles.categoryMenuC,'Value')
+categoryC = get(handles.categoryMenuC,'Value');
 % switch categoryC
 %     case 1
 %         set(handles.poiMenuC,'Value', 1);
@@ -4375,7 +4343,7 @@ global categoryB;
 global resultB;
 poiB = get(handles.poiMenuB,'Value');
 if poiB-1 ~= 0
-    resultB = get_poi_by_id_from_category_id(parsed_poi,categoryB-1, poiB-1)
+    resultB = get_poi_by_id_from_category_id(parsed_poi,categoryB-1, poiB-1);
     xB = resultB.xy(1);
     yB = resultB.xy(2);
 else
@@ -4747,8 +4715,8 @@ yBCorrect = 0;
 
 if (get(handles.showBtnA,'Value') == 1)
     pos = get(handles.mapDraw, 'currentpoint');% get mouse location on figure
-    xA = pos(1, 1)
-    yA = pos(1, 2)
+    xA = pos(1, 1);
+    yA = pos(1, 2);
     
     if 4.40 < xA & xA < 4.46
         xACorrect = 1;
@@ -4769,7 +4737,7 @@ if (get(handles.showBtnA,'Value') == 1)
         warn(20);
     end
     if xACorrect == 1 & yACorrect == 1
-        resultA = get_poi_by_coordinates(parsed_poi, xA, yA)
+        resultA = get_poi_by_coordinates(parsed_poi, xA, yA);
         set(handles.showBtnA,'Value', 0);
 
         if (get(handles.showCategoryBtn,'Value') == 1)
@@ -4790,6 +4758,7 @@ if (get(handles.showBtnA,'Value') == 1)
                 else
                     xA = 0;
                     yA = 0;
+                    warn(8);
                 end
             end
 
@@ -4820,6 +4789,7 @@ if (get(handles.showBtnA,'Value') == 1)
                 else
                     xA = 0;
                     yA = 0;
+                    warn(8);
                     set(handles.categoryMenuA, 'Value', 1);
                     categoryMenuA_Callback(hObject, eventdata, handles);
                     set(handles.poiMenuA,'Value', 1);
@@ -4834,7 +4804,7 @@ if (get(handles.showBtnA,'Value') == 1)
                 showBtnA_Callback(hObject, eventdata, handles);
             else
                 if flag_point_A == 1
-                    delete(hdotA)
+                    delete(hdotA);
                     flag_point_A = 0;
                 end
             end
@@ -4846,8 +4816,8 @@ end
 
 if (get(handles.showBtnB,'Value') == 1)
     pos = get(handles.mapDraw, 'currentpoint');% get mouse location on figure
-    xB = pos(1, 1)
-    yB = pos(1, 2)
+    xB = pos(1, 1);
+    yB = pos(1, 2);
     
     if 4.40 < xB & xB < 4.46
         xBCorrect = 1;
@@ -4856,7 +4826,7 @@ if (get(handles.showBtnB,'Value') == 1)
         xB = 0;
         yB = 0;
         set(handles.showBtnB,'Value', 0);
-        warn(19);
+        warn(21);
     end
     if 46.721 < yB & yB < 46.817
         yBCorrect = 1;
@@ -4865,10 +4835,10 @@ if (get(handles.showBtnB,'Value') == 1)
         xB = 0;
         yB = 0;
         set(handles.showBtnB,'Value', 0);
-        warn(20);
+        warn(22);
     end
     if xBCorrect == 1 & yBCorrect == 1
-        resultB = get_poi_by_coordinates(parsed_poi, xB, yB)
+        resultB = get_poi_by_coordinates(parsed_poi, xB, yB);
         set(handles.showBtnB,'Value', 0);
 
         if (get(handles.showCategoryBtn,'Value') == 1)
@@ -4889,6 +4859,7 @@ if (get(handles.showBtnB,'Value') == 1)
                 else
                     xB = 0;
                     yB = 0;
+                    warn(8);
                 end
             end
 
@@ -4919,6 +4890,7 @@ if (get(handles.showBtnB,'Value') == 1)
                 else
                     xB = 0;
                     yB = 0;
+                    warn(8);
                     set(handles.categoryMenuB, 'Value', 1);
                     categoryMenuB_Callback(hObject, eventdata, handles);
                     set(handles.poiMenuB,'Value', 1);
@@ -4933,7 +4905,7 @@ if (get(handles.showBtnB,'Value') == 1)
                 showBtnB_Callback(hObject, eventdata, handles);
             else
                 if flag_point_B == 1
-                    delete(hdotB)
+                    delete(hdotB);
                     flag_point_B = 0;
                 end
             end
@@ -4944,8 +4916,8 @@ end
 
 if (get(handles.infBtn,'Value') == 1)
     pos = get(handles.mapDraw, 'currentpoint');% get mouse location on figure
-    xI = pos(1, 1)
-    yI = pos(1, 2)
+    xI = pos(1, 1);
+    yI = pos(1, 2);
     
     if 4.40 < xI & xI < 4.46
         xICorrect = 1;
@@ -4964,7 +4936,7 @@ if (get(handles.infBtn,'Value') == 1)
         warn(24);
     end
     if xICorrect == 1 & yICorrect == 1
-        resultI = get_poi_by_coordinates(parsed_poi, xI, yI)
+        resultI = get_poi_by_coordinates(parsed_poi, xI, yI);
         if resultI.id ~= 0
             st1 = strcat('Name: ', resultI.name);
             st2 = strcat('Address: ', resultI.address);
@@ -4977,6 +4949,8 @@ if (get(handles.infBtn,'Value') == 1)
             set(handles.tInstrTwo, 'String', strI2);
             set(handles.tInstrThree, 'String', '');
             set(handles.tInstrFour, 'String', '');
+        else
+            warn(8);
         end  
     end
     set(handles.infBtn,'Value',0);
@@ -5105,3 +5079,28 @@ function infBtn_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Hint: get(hObject,'Value') returns toggle state of infBtn
+
+
+% --- Executes on button press in info.
+function info_Callback(hObject, eventdata, handles)
+% hObject    handle to info (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+st2 = 'Thanks to OpenStreetMap for simplification of our lives.';
+st5 = 'ViBOT8/MsCV5:';
+st6 = 'Emre Ozan Alkan';
+st7 = 'Oksana Hagen';
+st8 = 'Klemen Istenic';
+st9 = 'Natalia Shepeleva';
+s = strvcat(st2, '  ' ,st5, st6, st7, st8, st9);
+mesh = msgbox(s, 'About Youmap', 'help');
+
+
+% --- Executes on button press in showBtnA.
+function togglebutton94_Callback(hObject, eventdata, handles)
+% hObject    handle to showBtnA (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of showBtnA

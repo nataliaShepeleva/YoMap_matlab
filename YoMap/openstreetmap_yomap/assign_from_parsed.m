@@ -9,7 +9,7 @@ function [bounds, node, way, relation] = assign_from_parsed(parsed_osm)
 % Purpose:      assign from parsed osm structure
 % Copyright:    Ioannis Filippidis, 2010-
 
-disp('Parsed OpenStreetMap given.')
+%disp('Parsed OpenStreetMap given.')
 
 bounds = parsed_osm.bounds;
 node = parsed_osm.node;
