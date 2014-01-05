@@ -45,13 +45,16 @@ switch numb
     case 22
         error = 'Coordinate Y for point B is out of range';
     case 23
-        error = 'Coordinate X for point C is out of range';
+        error = 'Coordinate X C is out of range';
     case 24
-        error = 'Coordinate Y for point C is out of range';
+        error = 'Coordinate Y is out of range';
     case 25
         error = 'Enter correct radius';
     case 26 
         error = 'Choose any category for point C';
+    case 27
+        error = 'Radius is choosen as default' 
+        
 end
 
 hand = errordlg(error, 'YoMap');

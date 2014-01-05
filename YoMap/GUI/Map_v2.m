@@ -22,7 +22,7 @@ function varargout = Map_v2(varargin)
 
 % Edit the above text to modify the response to help Map_v2
 
-% Last Modified by GUIDE v2.5 04-Jan-2014 15:37:47
+% Last Modified by GUIDE v2.5 05-Jan-2014 14:25:49
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -502,8 +502,10 @@ btnMap = get(handles.showMapBtn, 'Value');
 btnRoads = get(handles.showRoadsBtn, 'Value');
 btnCategory = get(handles.showCategoryBtn, 'Value');
 
-route = 0;
 set(handles.tInstrOne, 'String', 'Insructions are here');
+set(handles.tInstrTwo, 'String', '');
+set(handles.tInstrThree, 'String', '');
+set(handles.tInstrFour, 'String', '');
 
 if get(handles.enterBtnA, 'Value') == 0 & get(handles.listBtnA, 'Value') == 0 & get(handles.mapBtnA, 'Value') == 0
     fA = 0;
@@ -599,7 +601,7 @@ if get(handles.radiusBtn, 'Value') == 0
                         route = findShortestWayByPosition(parsed_osm,xA,yA,xB,yB,transport);
                         if route ~= 0
                             points = [xB xA; yB yA];
-                        if resultA.id ~= 0
+                            if resultA.id ~= 0
                                 st1 = strcat('Name: ', resultA.name);
                                 st2 = strcat('Address: ', resultA.address);
                                 strA = strvcat('Start point', st1, st2);
@@ -623,7 +625,8 @@ if get(handles.radiusBtn, 'Value') == 0
                             end
                             if transport == 1
                                 st1 = 'Go by car';
-                            else
+                            end
+                            if transport == 2
                                 st1 = 'Go by foot';
                             end
                             dist = calc_distance_route(route);
@@ -660,7 +663,6 @@ if get(handles.radiusBtn, 'Value') == 0
                                 end
                              end
                         else
-                            warn(6);
                              if flag_point_A == 1 
                                 if flag_point_B == 1 
                                     delete(hdotA);
@@ -673,7 +675,7 @@ if get(handles.radiusBtn, 'Value') == 0
                                     show_Map_Result(h, btnMap, btnRoads, 0, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
                                     hdotA = draw_point(h, xA,yA, 0); 
                                 end
-                            else
+                             else
                                 if flag_point_B == 1
                                     delete(hdotB);
                                     show_Map_Result(h, btnMap, btnRoads, 0, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
@@ -682,6 +684,7 @@ if get(handles.radiusBtn, 'Value') == 0
                                     show_Map_Result(h, btnMap, btnRoads, 0, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
                                 end
                              end
+                            warn(6);
                         end
                     else
                         warn(1);
@@ -762,12 +765,7 @@ if get(handles.radiusBtn, 'Value') == 0
             end
             
             if categoryC ~= 1
-                if distance ~= 0
-                    pC = 1;
-                else
-                    pC = 0;
-                    warn(25);
-                end
+                pC = 1;
             else
                 pC = 0;
                 warn(26);
@@ -778,44 +776,46 @@ if get(handles.radiusBtn, 'Value') == 0
                    [route,points,resultC] = findShortestItinerary(parsed_osm,parsed_poi,xA,yA,xB,yB,categoryC-1,distance,transport);
                     s = size(route);
                     if s(2) > 1
-                       resultC       
-                            if resultA.id ~= 0
-                                st1 = strcat('Name: ', resultA.name);
-                                st2 = strcat('Address: ', resultA.address);
-                                strA = strvcat('Start point', st1, st2);
-                                set(handles.tInstrOne, 'String', strA);
-                            else
-                                st1 = strcat('X: ', num2str(xA));
-                                st2 = strcat('Y: ', num2str(yA));
-                                strA = strvcat('Start point', st1, st2);
-                                set(handles.tInstrOne, 'String', strA);
-                            end
-                            if resultB.id ~= 0
-                                st1 = strcat('Name: ', resultB.name);
-                                st2 = strcat('Address: ', resultB.address);
-                                strB = strvcat('End point', st1, st2);
-                                set(handles.tInstrTwo, 'String', strB);
-                            else
-                                st1 = strcat('X: ', num2str(xB));
-                                st2 = strcat('Y: ', num2str(yB));
-                                strB = strvcat('End point', st1, st2);
-                                set(handles.tInstrTwo, 'String', strB);
-                            end
-                            if resultC.id ~= 0
-                                st1 = strcat('Name: ', resultC.name);
-                                st2 = strcat('Address: ', resultC.address);
-                                strC = strvcat('Also visit', st1, st2);
-                                set(handles.tInstrThree, 'String', strC);
-                            end
-                            if transport == 1
-                                st1 = 'Go by car';
-                            else
-                                st1 = 'Go by foot';
-                            end
-                            dist = calc_distance_route(route);
-                            st2 = strcat('Route distance: ', num2str(dist), ' km');
-                            str = strvcat(st1, st2, 'Have a nice trip!');
-                            set(handles.tInstrFour, 'String', str);
+                        resultC  
+                        xC = resultC.xy(1)
+                        yC = resultC.xy(2)
+                        if resultA.id ~= 0
+                            st1 = strcat('Name: ', resultA.name);
+                            st2 = strcat('Address: ', resultA.address);
+                            strA = strvcat('Start point', st1, st2);
+                            set(handles.tInstrOne, 'String', strA);
+                        else
+                            st1 = strcat('X: ', num2str(xA));
+                            st2 = strcat('Y: ', num2str(yA));
+                            strA = strvcat('Start point', st1, st2);
+                            set(handles.tInstrOne, 'String', strA);
+                        end
+                        if resultB.id ~= 0
+                            st1 = strcat('Name: ', resultB.name);
+                            st2 = strcat('Address: ', resultB.address);
+                            strB = strvcat('End point', st1, st2);
+                            set(handles.tInstrTwo, 'String', strB);
+                        else
+                            st1 = strcat('X: ', num2str(xB));
+                            st2 = strcat('Y: ', num2str(yB));
+                            strB = strvcat('End point', st1, st2);
+                            set(handles.tInstrTwo, 'String', strB);
+                        end
+                        if resultC.id ~= 0
+                            st1 = strcat('Name: ', resultC.name);
+                            st2 = strcat('Address: ', resultC.address);
+                            strC = strvcat('Also visit', st1, st2);
+                            set(handles.tInstrThree, 'String', strC);
+                        end
+                        if transport == 1
+                            st1 = 'Go by car';
+                        else
+                            st1 = 'Go by foot';
+                        end
+                        dist = calc_distance_route(route);
+                        st2 = strcat('Route distance: ', num2str(dist), ' km');
+                        str = strvcat(st1, st2, 'Have a nice trip!');
+                        set(handles.tInstrFour, 'String', str);
                         if flag_point_A == 1 
                             if flag_point_B == 1
                                 if flag_point_C == 1  
@@ -894,29 +894,89 @@ if get(handles.radiusBtn, 'Value') == 0
                                 end
                             end
                         end
-                     else
-                        warn(6);
-                          if flag_point_A == 1 
-                            if flag_point_B == 1
-                                delete(hdotA);
-                                delete(hdotB);
-                                show_Map_Result(h, btnMap, btnRoads, 0, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
-                                hdotA = draw_point(h, xA,yA, 0);
-                                hdotB = draw_point(h, xB,yB, 1);
-                            else
-                                delete(hdotA);
-                                show_Map_Result(h, btnMap, btnRoads, 0, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
-                                hdotA = draw_point(h, xA,yA, 0); 
-                            end
-                        else
-                            if flag_point_B == 1
-                                delete(hdotB);
-                                show_Map_Result(h, btnMap, btnRoads, 0, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
-                                hdotB = draw_point(h, xB,yB, 1); 
-                            else
-                                show_Map_Result(h, btnMap, btnRoads, 0, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);;
-                            end
+                        if distance == 0
+                            warn(27);
                         end
+                    else
+                         warn(6);
+%                         if flag_point_A == 1 
+%                             if flag_point_B == 1
+% %                                 if flag_point_C == 1  
+% %                                     delete(hdotA);
+% %                                     delete(hdotB);
+% %                                     delete(hdotC);
+% %                                     set(handles.showWayBtn, 'Value', 1);
+% %                                     set(handles.showWayBtn, 'String', 'Hide way');
+% %                                     show_Map_Result(h, btnMap, btnRoads, 1, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
+% %                                     hdotA = draw_point(h, xA,yA, 0);
+% %                                     hdotB = draw_point(h, xB,yB, 1);
+% %                                     hdotC = draw_point(h, xC,yC, 3);
+% %                                     flag_point_C = 1;
+% %                                 else
+%                                     delete(hdotA);
+%                                     delete(hdotB);
+%                                     set(handles.showWayBtn, 'Value', 1);
+%                                     set(handles.showWayBtn, 'String', 'Hide way');
+%                                     show_Map_Result(h, btnMap, btnRoads, 1, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
+%                                     hdotA = draw_point(h, xA,yA, 0);
+%                                     hdotB = draw_point(h, xB,yB, 1);
+% %                                     hdotC = draw_point(h, xC,yC, 3);
+% %                                     flag_point_C = 1;
+% %                                 end
+%                             else
+% %                                 if flag_point_C == 1 
+% %                                     delete(hdotA);
+% %                                     delete(hdotC);
+% %                                     set(handles.showWayBtn, 'Value', 1);
+% %                                     set(handles.showWayBtn, 'String', 'Hide way');
+% %                                     show_Map_Result(h, btnMap, btnRoads, 1, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
+% %                                     hdotA = draw_point(h, xA,yA, 0);
+% %                                     hdotC = draw_point(h, xC,yC, 3);  
+% %                                 else
+%                                     delete(hdotA);
+%                                     set(handles.showWayBtn, 'Value', 1);
+%                                     set(handles.showWayBtn, 'String', 'Hide way');
+%                                     show_Map_Result(h, btnMap, btnRoads, 1, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
+%                                     hdotA = draw_point(h, xA,yA, 0); 
+% %                                     hdotC = draw_point(h, xC,yC, 3);
+% %                                     flag_point_C = 1;
+% %                                 end
+%                             end
+%                         else
+%                             if flag_point_B == 1
+% %                                 if flag_point_C == 1 
+% %                                     delete(hdotB);
+% %                                     delete(hdotC);
+% %                                     set(handles.showWayBtn, 'Value', 1);
+% %                                     set(handles.showWayBtn, 'String', 'Hide way');
+% %                                     show_Map_Result(h, btnMap, btnRoads, 1, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
+% %                                     hdotB = draw_point(h, xB,yB, 1);
+% %                                     hdotC = draw_point(h, xC,yC, 3); 
+% %                                 else
+%                                     delete(hdotB);
+%                                     set(handles.showWayBtn, 'Value', 1);
+%                                     set(handles.showWayBtn, 'String', 'Hide way');
+%                                     show_Map_Result(h, btnMap, btnRoads, 1, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
+%                                     hdotB = draw_point(h, xB,yB, 1); 
+% %                                     hdotC = draw_point(h, xC,yC, 3);
+% %                                     flag_point_C = 1;
+% %                                 end
+%                             else
+% %                                 if flag_point_C == 1 
+% %                                     delete(hdotC);
+% %                                     set(handles.showWayBtn, 'Value', 1);
+% %                                     set(handles.showWayBtn, 'String', 'Hide way');
+% %                                     show_Map_Result(h, btnMap, btnRoads, 1, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
+% %                                     hdotC = draw_point(h, xC,yC, 3); 
+% %                                 else
+%                                     set(handles.showWayBtn, 'Value', 1);
+%                                     set(handles.showWayBtn, 'String', 'Hide way');
+%                                     show_Map_Result(h, btnMap, btnRoads, 1, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
+% %                                     hdotC = draw_point(h, xC,yC, 3);
+% %                                     flag_point_C = 1;
+% %                                 end
+%                             end
+%                         end
                      end
                 else
                     warn(1);
@@ -963,12 +1023,7 @@ else
             end
 
             if categoryC ~= 1
-                if radius ~= 0
                     pC = 1;
-                else
-                    pC = 0;
-                    warn(25);
-                end
             else
                 pC = 0;
                 warn(26);
@@ -1019,7 +1074,7 @@ else
                                 set(handles.showWayBtn, 'Value', 1);
                                 show_Map_Result(h, btnMap, btnRoads, 1, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
                                 hdotA = draw_point(h, xA,yA, 0); 
-                                hdotC = draw_point(h, xC,yC, 3);
+                                hdotC = draw_point(h, xC,yC, 1);
                                 flag_point_C = 1;
                             end
                         else
@@ -1031,19 +1086,44 @@ else
                             else
                                 set(handles.showWayBtn, 'Value', 1);
                                 show_Map_Result(h, btnMap, btnRoads, 1, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
-                                hdotC = draw_point(h, xC,yC, 3);
+                                hdotC = draw_point(h, xC,yC, 1);
                                 flag_point_C = 1;
                             end
                          end
+                        if radius == 0
+                            warn(27);
+                        end
                     else
                         warn(6);
-                        if flag_point_A == 1 
-                            delete(hdotA);
-                            show_Map_Result(h, btnMap, btnRoads, 0, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
-                            hdotA = draw_point(h, xA,yA, 0); 
-                        else
-                            show_Map_Result(h, btnMap, btnRoads, 0, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
-                         end
+%                          if flag_point_A == 1 
+% %                             if flag_point_C == 1 
+% %                                 delete(hdotA);
+% %                                 delete(hdotC);
+% %                                 set(handles.showWayBtn, 'Value', 1);
+% %                                 show_Map_Result(h, btnMap, btnRoads, 1, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
+% %                                 hdotA = draw_point(h, xA,yA, 0);
+% %                                 hdotC = draw_point(h, xC,yC, 1);
+% %                             else
+%                                 delete(hdotA);
+%                                 set(handles.showWayBtn, 'Value', 1);
+%                                 show_Map_Result(h, btnMap, btnRoads, 1, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
+%                                 hdotA = draw_point(h, xA,yA, 0); 
+% %                                 hdotC = draw_point(h, xC,yC, 3);
+% %                                 flag_point_C = 1;
+% %                             end
+%                         else
+% %                             if flag_point_C == 1
+% %                                 delete(hdotC);
+% %                                 set(handles.showWayBtn, 'Value', 1);
+% %                                 show_Map_Result(h, btnMap, btnRoads, 1, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
+% %                                 hdotC = draw_point(h, xC,yC, 1); 
+% %                             else
+%                                 set(handles.showWayBtn, 'Value', 1);
+%                                 show_Map_Result(h, btnMap, btnRoads, 1, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
+% %                                 hdotC = draw_point(h, xC,yC, 3);
+% %                                 flag_point_C = 1;
+% %                             end
+%                          end
                     end
                 else
                     warn(1);
@@ -1070,6 +1150,13 @@ global flag_point_C;
 global flag_point_B;
 global categoryC;
 
+global xB;
+global yB;
+global categoryB;
+global poiB;
+global valueB;
+global resultB;
+
 if (get(handles.radiusBtn,'Value') == 1)
     set(handles.radiusSearch, 'Visible', 'on');
     set(handles.radiusSearch, 'String', '0');
@@ -1077,6 +1164,24 @@ if (get(handles.radiusBtn,'Value') == 1)
     set(handles.iteneraryBtn, 'Value', 0);
     if strcmp(get(handles.panelB, 'Visible'), 'on') == 1
         set(handles.panelB, 'Visible', 'off');
+        
+        set(handles.enterBtnB, 'Value', 0);
+        enterBtnB_Callback(hObject, eventdata, handles);
+        set(handles.listBtnB, 'Value', 0);
+        listBtnB_Callback(hObject, eventdata, handles);
+        set(handles.mapBtnB, 'Value', 0);
+        mapBtnB_Callback(hObject, eventdata, handles);
+        xB = 0;
+        yB = 0;
+        categoryB = 1
+        poiB = 1;
+        valueB = '';
+        resultB.id = 0
+        set(handles.userEnterB, 'String','');
+        set(handles.categoryMenuB, 'Value',1);
+        set(handles.poiMenuB, 'Value',1);
+        set(handles.coordXB , 'String', '0');
+        set(handles.coordYB , 'String', '0');   
     end
     if strcmp(get(handles.panelC, 'Visible'), 'off') == 1
         set(handles.panelC, 'Visible', 'on');
@@ -1084,11 +1189,12 @@ if (get(handles.radiusBtn,'Value') == 1)
     set(handles.swapBtn, 'Visible', 'off');
     set(handles.categoryMenuC,'Value', 1);
     set(handles.categoryMenuC,'String',cat);
-    flag_point_C = 0;
     categoryC = 1;
     if flag_point_C == 1
         delete(hdotC);
         flag_point_C = 0;
+        xC = 0;
+        yC = 0;
     end
     if flag_point_B == 1
         delete(hdotB);
@@ -1102,7 +1208,6 @@ else
     if strcmp(get(handles.panelC, 'Visible'), 'on') == 1
         set(handles.panelC, 'Visible', 'off');
     end      
-    set(handles.swapBtn, 'Visible', 'on');
     
     if flag_point_C == 1
         delete(hdotC);
@@ -1182,128 +1287,118 @@ end
 
 if get(handles.showWayBtn, 'Value') == 1
     set(handles.showWayBtn,'String', 'Hide way');
-    if strcmp(get(handles.panelC, 'Visible'), 'on') == 1
-        flg = 1;
-    else
-        flg = 0;
-    end
     
     if get(handles.enterBtnA, 'Value') == 1 | get(handles.listBtnA, 'Value') == 1 | get(handles.mapBtnA, 'Value') == 1 | get(handles.enterBtnB, 'Value') == 1 | get(handles.listBtnB, 'Value') == 1 | get(handles.mapBtnB, 'Value') == 1
         if flag_point_A == 1 
             if flag_point_B == 1
-%                 if flg == 1 & flag_point_C == 1  
-%                     delete(hdotA);
-%                     delete(hdotB);
-%                     delete(hdotC);
-%                     show_Map_Result(h, btnMap, btnRoads, btnWay, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
-%                     hdotA = draw_point(h, xA,yA, 0);
-%                     hdotB = draw_point(h, xB,yB, 1);
-%                     hdotC = draw_point(h, xC,yC, 3);
-%                 else
+                if flag_point_C == 1  
+                    delete(hdotA);
+                    delete(hdotB);
+                    delete(hdotC);
+                    show_Map_Result(h, btnMap, btnRoads, btnWay, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
+                    hdotA = draw_point(h, xA,yA, 0);
+                    hdotB = draw_point(h, xB,yB, 1);
+                    hdotC = draw_point(h, xC,yC, 3);
+                else
                     delete(hdotA);
                     delete(hdotB);
                     show_Map_Result(h, btnMap, btnRoads, btnWay, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
                     hdotA = draw_point(h, xA,yA, 0);
                     hdotB = draw_point(h, xB,yB, 1);
-%                 end
+                end
             else
-%                 if flg == 1 & flag_point_C == 1 
-%                     delete(hdotA);
-%                     delete(hdotC);
-%                     show_Map_Result(h, btnMap, btnRoads, btnWay, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
-%                     hdotA = draw_point(h, xA,yA, 0);
-%                     hdotC = draw_point(h, xC,yC, 3);  
-%                 else
+                if flag_point_C == 1 
+                    delete(hdotA);
+                    delete(hdotC);
+                    show_Map_Result(h, btnMap, btnRoads, btnWay, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
+                    hdotA = draw_point(h, xA,yA, 0);
+                    hdotC = draw_point(h, xC,yC, 3);  
+                else
                     delete(hdotA);
                     show_Map_Result(h, btnMap, btnRoads, btnWay, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
                     hdotA = draw_point(h, xA,yA, 0); 
-%                 end
+                end
             end
         else
             if flag_point_B == 1
-%                 if flg == 1 & flag_point_C == 1 
-%                     delete(hdotB);
-%                     delete(hdotC);
-%                     show_Map_Result(h, btnMap, btnRoads, btnWay, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
-%                     hdotB = draw_point(h, xB,yB, 1);
-%                     hdotC = draw_point(h, xC,yC, 3); 
-%                 else
+                if flag_point_C == 1 
+                    delete(hdotB);
+                    delete(hdotC);
+                    show_Map_Result(h, btnMap, btnRoads, btnWay, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
+                    hdotB = draw_point(h, xB,yB, 1);
+                    hdotC = draw_point(h, xC,yC, 3); 
+                else
                     delete(hdotB);
                     show_Map_Result(h, btnMap, btnRoads, btnWay, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
                     hdotB = draw_point(h, xB,yB, 1); 
-%                 end
+                end
             else
-%                 if flg == 1 & flag_point_C == 1 
-%                     delete(hdotC);
-%                     show_Map_Result(h, btnMap, btnRoads, btnWay, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
-%                     hdotC = draw_point(h, xC,yC, 3); 
-%                 else
+                if flag_point_C == 1 
+                    delete(hdotC);
                     show_Map_Result(h, btnMap, btnRoads, btnWay, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
-%                 end
+                    hdotC = draw_point(h, xC,yC, 3); 
+                else
+                    show_Map_Result(h, btnMap, btnRoads, btnWay, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
+                end
             end
         end
     end
 
 else
     set(handles.showWayBtn,'String', 'Show way');
-    if strcmp(get(handles.panelC, 'Visible'), 'on') == 1
-        flg = 1;
-    else
-        flg = 0;
-    end
     
     if get(handles.enterBtnA, 'Value') == 1 | get(handles.listBtnA, 'Value') == 1 | get(handles.mapBtnA, 'Value') == 1 | get(handles.enterBtnB, 'Value') == 1 | get(handles.listBtnB, 'Value') == 1 | get(handles.mapBtnB, 'Value') == 1
         if flag_point_A == 1 
             if flag_point_B == 1
-%                 if flg == 1 & flag_point_C == 1  
-%                     delete(hdotA);
-%                     delete(hdotB);
-%                     delete(hdotC);
-%                     show_Map_Result(h, btnMap, btnRoads, btnWay, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
-%                     hdotA = draw_point(h, xA,yA, 0);
-%                     hdotB = draw_point(h, xB,yB, 1);
-%                     hdotC = draw_point(h, xC,yC, 3);
-%                 else
+                if flag_point_C == 1  
+                    delete(hdotA);
+                    delete(hdotB);
+                    delete(hdotC);
+                    show_Map_Result(h, btnMap, btnRoads, btnWay, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
+                    hdotA = draw_point(h, xA,yA, 0);
+                    hdotB = draw_point(h, xB,yB, 1);
+                    hdotC = draw_point(h, xC,yC, 3);
+                else
                     delete(hdotA);
                     delete(hdotB);
                     show_Map_Result(h, btnMap, btnRoads, btnWay, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
                     hdotA = draw_point(h, xA,yA, 0);
                     hdotB = draw_point(h, xB,yB, 1);
-%                 end
+                end
             else
-%                 if flg == 1 & flag_point_C == 1 
-%                     delete(hdotA);
-%                     delete(hdotC);
-%                     show_Map_Result(h, btnMap, btnRoads, btnWay, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
-%                     hdotA = draw_point(h, xA,yA, 0);
-%                     hdotC = draw_point(h, xC,yC, 3);  
-%                 else
+                if flag_point_C == 1 
+                    delete(hdotA);
+                    delete(hdotC);
+                    show_Map_Result(h, btnMap, btnRoads, btnWay, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
+                    hdotA = draw_point(h, xA,yA, 0);
+                    hdotC = draw_point(h, xC,yC, 3);  
+                else
                     delete(hdotA);
                     show_Map_Result(h, btnMap, btnRoads, btnWay, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
                     hdotA = draw_point(h, xA,yA, 0); 
-%                 end
+                end
             end
         else
             if flag_point_B == 1
-%                 if flg == 1 & flag_point_C == 1 
-%                     delete(hdotB);
-%                     delete(hdotC);
-%                     show_Map_Result(h, btnMap, btnRoads, btnWay, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
-%                     hdotB = draw_point(h, xB,yB, 1);
-%                     hdotC = draw_point(h, xC,yC, 3); 
-%                 else
+                if flag_point_C == 1 
+                    delete(hdotB);
+                    delete(hdotC);
+                    show_Map_Result(h, btnMap, btnRoads, btnWay, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
+                    hdotB = draw_point(h, xB,yB, 1);
+                    hdotC = draw_point(h, xC,yC, 3); 
+                else
                     delete(hdotB);
                     show_Map_Result(h, btnMap, btnRoads, btnWay, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
                     hdotB = draw_point(h, xB,yB, 1); 
-%                 end
+                end
             else
-%                 if flg == 1 & flag_point_C == 1 
-%                     delete(hdotC);
-%                     show_Map_Result(h, btnMap, btnRoads, btnWay, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
-%                     hdotC = draw_point(h, xC,yC, 3); 
-%                 else
+                if flag_point_C == 1 
+                    delete(hdotC);
                     show_Map_Result(h, btnMap, btnRoads, btnWay, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
-%                 end
+                    hdotC = draw_point(h, xC,yC, 3); 
+                else
+                    show_Map_Result(h, btnMap, btnRoads, btnWay, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
+                end
             end
         end
     end
@@ -1650,6 +1745,18 @@ global flag_point_A;
 if get(handles.enterBtnA, 'Value') == 1
     set(handles.listBtnA, 'Value', 0);
     set(handles.mapBtnA, 'Value', 0);
+    
+    if get(handles.listBtnB, 'Value') == 1 | get(handles.mapBtnB, 'Value') == 1 | get(handles.enterBtnB, 'Value') == 0 | get(handles.iteneraryBtn, 'Value') == 1 | get(handles.radiusBtn, 'Value') == 1
+        if strcmp(get(handles.swapBtn, 'Visible'), 'on') == 1
+            set(handles.swapBtn, 'Visible', 'off');
+        end
+    else
+            if get(handles.swapBtn, 'Value') == 0
+                set(handles.swapBtn, 'Visible', 'on');
+            end
+    end
+    
+    
     if get(handles.showCategoryBtn, 'Value') == 1
         set(handles.showBtnA, 'Visible', 'on')
     else
@@ -1687,6 +1794,7 @@ else
     set(handles.userEnterA, 'Enable', 'off');
     set(handles.userEnterA, 'String', '');
     set(handles.showBtnA, 'Visible', 'off')
+    set(handles.swapBtn, 'Visible', 'off');
     if flag_point_A == 1
         delete(hdotA); 
         flag_point_A = 0;
@@ -1710,6 +1818,16 @@ global flag_point_A;
 if get(handles.listBtnA, 'Value')
     set(handles.enterBtnA, 'Value', 0);
     set(handles.mapBtnA, 'Value', 0);
+    
+    if get(handles.enterBtnB, 'Value') == 1 | get(handles.mapBtnB, 'Value') == 1 | get(handles.listBtnB, 'Value') == 0 | get(handles.iteneraryBtn, 'Value') == 1 | get(handles.radiusBtn, 'Value') == 1
+        if strcmp(get(handles.swapBtn, 'Visible'), 'on') == 1
+            set(handles.swapBtn, 'Visible', 'off');
+        end
+    else
+            if get(handles.swapBtn, 'Value') == 0
+                set(handles.swapBtn, 'Visible', 'on');
+            end
+    end
     
     set(handles.categoryMenuA, 'Visible', 'on');
     set(handles.categoryMenuA,'Value', 1);
@@ -1748,6 +1866,7 @@ else
     set(handles.categoryMenuA, 'Visible', 'off');
     set(handles.poiMenuA, 'Visible', 'off')
     
+    set(handles.swapBtn, 'Visible', 'off');
     set(handles.userEnterA, 'Visible', 'on');
     set(handles.userEnterA, 'Enable', 'off');
     set(handles.showBtnA, 'Visible', 'off')
@@ -1774,6 +1893,16 @@ global yA;
 if get(handles.mapBtnA, 'Value')
     set(handles.enterBtnA,  'Value', 0);
     set(handles.listBtnA,  'Value', 0);
+    
+    if get(handles.enterBtnB, 'Value') == 1 | get(handles.listBtnB, 'Value') == 1 | get(handles.mapBtnB, 'Value') == 0 | get(handles.iteneraryBtn, 'Value') == 1 | get(handles.radiusBtn, 'Value') == 1
+        if strcmp(get(handles.swapBtn, 'Visible'), 'on') == 1
+            set(handles.swapBtn, 'Visible', 'off');
+        end
+    else
+            if get(handles.swapBtn, 'Value') == 0
+                set(handles.swapBtn, 'Visible', 'on');
+            end
+    end
     
     set(handles.coordXA, 'Visible', 'on');
     set(handles.coordYA, 'Visible', 'on');
@@ -1817,6 +1946,7 @@ else
         delete(hdotA);
         flag_point_A = 0;
     end
+    set(handles.swapBtn, 'Visible', 'off');
     set(handles.userEnterA, 'Visible', 'on');
     set(handles.userEnterA, 'Enable', 'off');
     set(handles.userEnterA, 'String', '');
@@ -1839,6 +1969,17 @@ global flag_point_B;
 if get(handles.enterBtnB, 'Value') == 1
     set(handles.listBtnB, 'Value', 0);
     set(handles.mapBtnB, 'Value', 0);
+    
+     if get(handles.listBtnA, 'Value') == 1 | get(handles.mapBtnA, 'Value') == 1 | get(handles.enterBtnA, 'Value') == 0 | get(handles.iteneraryBtn, 'Value') == 1 | get(handles.radiusBtn, 'Value') == 1
+        if strcmp(get(handles.swapBtn, 'Visible'), 'on') == 1
+            set(handles.swapBtn, 'Visible', 'off');
+        end
+     else
+            if get(handles.swapBtn, 'Value') == 0
+                set(handles.swapBtn, 'Visible', 'on');
+            end
+    end
+    
     if get(handles.showCategoryBtn, 'Value') == 1
         set(handles.showBtnB, 'Visible', 'on')
     else
@@ -1876,6 +2017,7 @@ else
     set(handles.userEnterB, 'Enable', 'off');
     set(handles.userEnterB, 'String', '');
     set(handles.showBtnB, 'Visible', 'off')
+    set(handles.swapBtn, 'Visible', 'off');
     if flag_point_B == 1
         delete(hdotB); 
         flag_point_B = 0;
@@ -1898,6 +2040,16 @@ global flag_point_B;
 if get(handles.listBtnB, 'Value')
     set(handles.enterBtnB, 'Value', 0);
     set(handles.mapBtnB, 'Value', 0);
+    
+     if get(handles.enterBtnA, 'Value') == 1 | get(handles.mapBtnA, 'Value') == 1 | get(handles.listBtnA, 'Value') == 0 | get(handles.iteneraryBtn, 'Value') == 1 | get(handles.radiusBtn, 'Value') == 1
+        if strcmp(get(handles.swapBtn, 'Visible'), 'on') == 1
+            set(handles.swapBtn, 'Visible', 'off');
+        end
+     else
+            if get(handles.swapBtn, 'Value') == 0
+                set(handles.swapBtn, 'Visible', 'on');
+            end
+    end
     
     set(handles.categoryMenuB, 'Visible', 'on');
     set(handles.categoryMenuB,'Value', 1);
@@ -1940,6 +2092,7 @@ else
     set(handles.userEnterB, 'Enable', 'off');
     set(handles.userEnterB, 'String', '');
     set(handles.showBtnB, 'Visible', 'off');
+    set(handles.swapBtn, 'Visible', 'off');
     if flag_point_B == 1
         delete(hdotB);
         flag_point_B = 0;
@@ -1963,6 +2116,16 @@ global yB;
 if get(handles.mapBtnB, 'Value')
     set(handles.enterBtnB,  'Value', 0);
     set(handles.listBtnB,  'Value', 0);
+    
+     if get(handles.enterBtnA, 'Value') == 1 | get(handles.listBtnA, 'Value') == 1 | get(handles.mapBtnA, 'Value') == 0 | get(handles.iteneraryBtn, 'Value') == 1 | get(handles.radiusBtn, 'Value') == 1
+        if strcmp(get(handles.swapBtn, 'Visible'), 'on') == 1
+            set(handles.swapBtn, 'Visible', 'off');
+        end
+     else
+        if get(handles.swapBtn, 'Value') == 0
+            set(handles.swapBtn, 'Visible', 'on');
+        end
+    end
     
     set(handles.coordXB, 'Visible', 'on');
     set(handles.coordYB, 'Visible', 'on');
@@ -2006,6 +2169,7 @@ else
         delete(hdotB);
         flag_point_B = 0;
     end
+    set(handles.swapBtn, 'Visible', 'off');
     set(handles.userEnterB, 'Visible', 'on');
     set(handles.userEnterB, 'Enable', 'off');
     set(handles.userEnterB, 'String', '');
@@ -2018,6 +2182,7 @@ function swapBtn_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 global parsed_poi;
+global valueA;
 global valueB;
 global h;
 global xA;
@@ -2116,66 +2281,208 @@ if (get(handles.enterBtnA, 'Value') == 1 & get(handles.enterBtnB, 'Value') == 1)
             else
                 searchBtn_Callback(hObject, eventdata, handles)
             end
+        else
+            valueA = get(handles.userEnterA, 'String');
+            valueB = get(handles.userEnterB, 'String');
+            set(handles.userEnterA, 'String', valueB);
+            set(handles.userEnterB, 'String', valueA);
+            valueA = get(handles.userEnterA, 'String');
+            valueB = get(handles.userEnterB, 'String');
+            k = xA;
+            xA = xB;
+            xB = k;
+            k = yA;
+            yA = yB;
+            yB = k;
+            k = resultA;
+            resultA = resultB;
+            resultB = k;
+            
+            if route ~= 0 
+                searchBtn_Callback(hObject, eventdata, handles)
+            end 
         end
     end
 end
 
 
-% if (get(handles.listBtnA, 'Value') == 1 & get(handles.listBtnB, 'Value') == 1)
-%     numA = 0;
-%     numB = 0;
-%     if flag_point_A == 1 
-%         if flag_point_B == 1
-%             categoryA = get(handles.categoryMenuA,'Value');
-%             categoryB = get(handles.categoryMenuB,'Value');
-%             poiA = get(handles.poiMenuA,'Value');
-%             poiB = get(handles.poiMenuB,'Value');
-% 
-%             set(handles.categoryMenuA,'Value', categoryB);
-%             set(handles.categoryMenuB,'Value', categoryA);
-% 
-%             set(handles.poiMenuA,'Value', 1);
-%             poi_nameA = get_names_poi_by_category_id( parsed_poi,categoryB-1);
-%             set(handles.poiMenuA, 'String', poi_nameA);
-%             for i = 1:1:size(poi_nameA)
-%                 if i == poiB
-%                     numA = i-1;
-%                 end
-%             end 
-%             set(handles.poiMenuA, 'Value', numA);
-% 
-%             set(handles.poiMenuB,'Value', 1);
-%             poi_nameB = get_names_poi_by_category_id( parsed_poi,categoryA-1);
-%             set(handles.poiMenuB, 'String', poi_nameB);
-%             for i = 1:1:size(poi_nameB)
-%                 if i == poiA
-%                     numB = i-1;
-%                 end
-%             end 
-%             set(handles.poiMenuB, 'Value', numB);
-% 
-%             categoryA = get(handles.categoryMenuA,'Value');
-%             categoryB = get(handles.categoryMenuB,'Value');
-%             poiA = get(handles.poiMenuA,'Value');
-%             poiB = get(handles.poiMenuB,'Value');
-%             
-%             k = xA;
-%             xA = xB;
-%             xB = k;
-%             k = yA;
-%             yA = yB;
-%             yB = k;
-%             if route == 0
-%                 delete(hdotA);
-%                 delete(hdotB);
-%                 hdotA = draw_point(h,xA,yA,0);
-%                 hdotB = draw_point(h,xB,yB,1);
-%             else
-%                 searchBtn_Callback(hObject, eventdata, handles)
-%             end
-%         end
-%     end
-% end
+if (get(handles.listBtnA, 'Value') == 1 & get(handles.listBtnB, 'Value') == 1)
+    numA = 0;
+    numB = 0;
+    if flag_point_A == 1 
+        if flag_point_B == 1
+            categoryA = get(handles.categoryMenuA,'Value');
+            categoryB = get(handles.categoryMenuB,'Value');
+            poiA = get(handles.poiMenuA,'Value');
+            poiB = get(handles.poiMenuB,'Value');
+
+            k = resultA;
+            resultA = resultB;
+            resultB = k;
+            
+            set(handles.categoryMenuA, 'Value', (resultA.cat_id+1));
+            categoryA = resultA.cat_id+1;
+            set(handles.poiMenuA,'Value', 1);
+            poi_name = get_names_poi_by_category_id( parsed_poi,resultA.cat_id);
+            set(handles.poiMenuA, 'String', poi_name);
+            for i = 1:1:size(poi_name)
+                if strcmp(poi_name(i),resultA.name) == 1
+                    num = i;
+                end
+            end 
+            poiA = num;
+            set(handles.poiMenuA, 'Value', num);
+            
+            set(handles.categoryMenuB, 'Value', (resultB.cat_id+1));
+            categoryB = resultB.cat_id+1;
+            set(handles.poiMenuB,'Value', 1);
+            poi_name = get_names_poi_by_category_id( parsed_poi,resultB.cat_id);
+            set(handles.poiMenuB, 'String', poi_name);
+            for i = 1:1:size(poi_name)
+                if strcmp(poi_name(i),resultB.name) == 1
+                    num = i;
+                end
+            end 
+            poiB = num;
+            set(handles.poiMenuB, 'Value', num);
+            
+
+            categoryA = get(handles.categoryMenuA,'Value');
+            categoryB = get(handles.categoryMenuB,'Value');
+            poiA = get(handles.poiMenuA,'Value');
+            poiB = get(handles.poiMenuB,'Value');
+            
+            k = xA;
+            xA = xB;
+            xB = k;
+            k = yA;
+            yA = yB;
+            yB = k;
+            if route == 0
+                delete(hdotA);
+                delete(hdotB);
+                hdotA = draw_point(h,xA,yA,0);
+                hdotB = draw_point(h,xB,yB,1);
+            else
+                searchBtn_Callback(hObject, eventdata, handles)
+            end
+        else
+            categoryA = get(handles.categoryMenuA,'Value');
+            categoryB = get(handles.categoryMenuB,'Value');
+            poiA = get(handles.poiMenuA,'Value');
+            poiB = get(handles.poiMenuB,'Value');
+
+            k = resultA;
+            resultA = resultB;
+            resultB = k;
+            
+            set(handles.categoryMenuA, 'Value', (resultA.cat_id+1));
+            categoryA = resultA.cat_id+1;
+            set(handles.poiMenuA,'Value', 1);
+            poi_name = get_names_poi_by_category_id( parsed_poi,resultA.cat_id);
+            set(handles.poiMenuA, 'String', poi_name);
+            for i = 1:1:size(poi_name)
+                if strcmp(poi_name(i),resultA.name) == 1
+                    num = i;
+                end
+            end 
+            poiA = num;
+            set(handles.poiMenuA, 'Value', num);
+            
+            set(handles.categoryMenuB, 'Value', (resultB.cat_id+1));
+            categoryB = resultB.cat_id+1;
+            set(handles.poiMenuB,'Value', 1);
+            poi_name = get_names_poi_by_category_id( parsed_poi,resultB.cat_id);
+            set(handles.poiMenuB, 'String', poi_name);
+            for i = 1:1:size(poi_name)
+                if strcmp(poi_name(i),resultB.name) == 1
+                    num = i;
+                end
+            end 
+            poiB = num;
+            set(handles.poiMenuB, 'Value', num);
+            
+
+            categoryA = get(handles.categoryMenuA,'Value');
+            categoryB = get(handles.categoryMenuB,'Value');
+            poiA = get(handles.poiMenuA,'Value');
+            poiB = get(handles.poiMenuB,'Value');
+            
+            k = xA;
+            xA = xB;
+            xB = k;
+            k = yA;
+            yA = yB;
+            yB = k;
+            if route == 0
+                delete(hdotA);
+                hdotB = draw_point(h,xB,yB,1);
+                flag_point_A = 0;
+                flag_point_B = 1;
+            else
+                searchBtn_Callback(hObject, eventdata, handles)
+            end
+        end
+    else
+        if flag_point_B == 1
+            categoryA = get(handles.categoryMenuA,'Value');
+            categoryB = get(handles.categoryMenuB,'Value');
+            poiA = get(handles.poiMenuA,'Value');
+            poiB = get(handles.poiMenuB,'Value');
+
+            k = resultA;
+            resultA = resultB;
+            resultB = k;
+            
+            set(handles.categoryMenuA, 'Value', (resultA.cat_id+1));
+            categoryA = resultA.cat_id+1;
+            set(handles.poiMenuA,'Value', 1);
+            poi_name = get_names_poi_by_category_id( parsed_poi,resultA.cat_id);
+            set(handles.poiMenuA, 'String', poi_name);
+            for i = 1:1:size(poi_name)
+                if strcmp(poi_name(i),resultA.name) == 1
+                    num = i;
+                end
+            end 
+            poiA = num;
+            set(handles.poiMenuA, 'Value', num);
+            
+            set(handles.categoryMenuB, 'Value', (resultB.cat_id+1));
+            categoryB = resultB.cat_id+1;
+            set(handles.poiMenuB,'Value', 1);
+            poi_name = get_names_poi_by_category_id( parsed_poi,resultB.cat_id);
+            set(handles.poiMenuB, 'String', poi_name);
+            for i = 1:1:size(poi_name)
+                if strcmp(poi_name(i),resultB.name) == 1
+                    num = i;
+                end
+            end 
+            poiB = num;
+            set(handles.poiMenuB, 'Value', num);
+            
+
+            categoryA = get(handles.categoryMenuA,'Value');
+            categoryB = get(handles.categoryMenuB,'Value');
+            poiA = get(handles.poiMenuA,'Value');
+            poiB = get(handles.poiMenuB,'Value');
+            
+            k = xA;
+            xA = xB;
+            xB = k;
+            k = yA;
+            yA = yB;
+            yB = k;
+            if route == 0
+                delete(hdotB);
+                hdotA = draw_point(h,xA,yA,0);
+                flag_point_A = 1;
+                flag_point_B = 0;
+            else
+                searchBtn_Callback(hObject, eventdata, handles)
+            end
+        end
+    end
+end
 
 
 if (get(handles.mapBtnA, 'Value') == 1 & get(handles.mapBtnB, 'Value') == 1)
@@ -3759,149 +4066,306 @@ end
     
 if get(handles.showCategoryBtn, 'Value') == 1
     set(handles.showCategoryBtn,'String', 'Hide category');
+    
     if get(handles.enterBtnA, 'Value') == 1 | get(handles.listBtnA, 'Value') == 1
         set(handles.showBtnA, 'Visible', 'on');
     end   
     if get(handles.enterBtnB, 'Value') == 1 | get(handles.listBtnB, 'Value') == 1
         set(handles.showBtnB, 'Visible', 'on');
     end
-%     if strcmp(get(handles.panelC, 'Visible'), 'on') == 1
-%         flg = 1;
-% %         if get(handles.enterBtnC, 'Value') == 1 | get(handles.listBtnC, 'Value') == 1
-% %             set(handles.showBtnC, 'Visible', 'on');
-% %         end
-%     else
-%         flg = 0;
-%     end
     
-    if get(handles.enterBtnA, 'Value') == 1 | get(handles.listBtnA, 'Value') == 1 | get(handles.mapBtnA, 'Value') == 1 | get(handles.enterBtnB, 'Value') == 1 | get(handles.listBtnB, 'Value') == 1 | get(handles.mapBtnB, 'Value') == 1
+    set(handles.infBtn, 'Visible', 'on');
+    
+    if get(handles.iteneraryBtn, 'Value') == 1
         if flag_point_A == 1 
             if flag_point_B == 1
-%                 if flg == 1 & flag_point_C == 1  
-%                     delete(hdotA);
-%                     delete(hdotB);
-%                     delete(hdotC);
-%                     show_Map_Result(h, btnMap, btnRoads, btnWay, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
-%                     hdotA = draw_point(h, xA,yA, 0);
-%                     hdotB = draw_point(h, xB,yB, 1);
-%                     hdotC = draw_point(h, xC,yC, 3);
-%                 else
+                if flag_point_C == 1  
+                    delete(hdotA);
+                    delete(hdotB);
+                    delete(hdotC);
+                    set(handles.showWayBtn, 'Value', 1);
+                    set(handles.showWayBtn, 'String', 'Hide way');
+                    show_Map_Result(h, btnMap, btnRoads, 1, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
+                    hdotA = draw_point(h, xA,yA, 0);
+                    hdotB = draw_point(h, xB,yB, 1);
+                    hdotC = draw_point(h, xC,yC, 3);
+                    flag_point_C = 1;
+                else
+                    delete(hdotA);
+                    delete(hdotB);
+                    set(handles.showWayBtn, 'Value', 1);
+                    set(handles.showWayBtn, 'String', 'Hide way');
+                    show_Map_Result(h, btnMap, btnRoads, 1, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
+                    hdotA = draw_point(h, xA,yA, 0);
+                    hdotB = draw_point(h, xB,yB, 1);
+                    hdotC = draw_point(h, xC,yC, 3);
+                    flag_point_C = 1;
+                end
+            else
+                if flag_point_C == 1 
+                    delete(hdotA);
+                    delete(hdotC);
+                    set(handles.showWayBtn, 'Value', 1);
+                    set(handles.showWayBtn, 'String', 'Hide way');
+                    show_Map_Result(h, btnMap, btnRoads, 1, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
+                    hdotA = draw_point(h, xA,yA, 0);
+                    hdotC = draw_point(h, xC,yC, 3);  
+                else
+                    delete(hdotA);
+                    set(handles.showWayBtn, 'Value', 1);
+                    set(handles.showWayBtn, 'String', 'Hide way');
+                    show_Map_Result(h, btnMap, btnRoads, 1, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
+                    hdotA = draw_point(h, xA,yA, 0); 
+                    hdotC = draw_point(h, xC,yC, 3);
+                    flag_point_C = 1;
+                end
+            end
+        else
+            if flag_point_B == 1
+                if flag_point_C == 1 
+                    delete(hdotB);
+                    delete(hdotC);
+                    set(handles.showWayBtn, 'Value', 1);
+                    set(handles.showWayBtn, 'String', 'Hide way');
+                    show_Map_Result(h, btnMap, btnRoads, 1, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
+                    hdotB = draw_point(h, xB,yB, 1);
+                    hdotC = draw_point(h, xC,yC, 3); 
+                else
+                    delete(hdotB);
+                    set(handles.showWayBtn, 'Value', 1);
+                    set(handles.showWayBtn, 'String', 'Hide way');
+                    show_Map_Result(h, btnMap, btnRoads, 1, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
+                    hdotB = draw_point(h, xB,yB, 1); 
+                    hdotC = draw_point(h, xC,yC, 3);
+                    flag_point_C = 1;
+                end
+            else
+                if flag_point_C == 1 
+                    delete(hdotC);
+                    set(handles.showWayBtn, 'Value', 1);
+                    set(handles.showWayBtn, 'String', 'Hide way');
+                    show_Map_Result(h, btnMap, btnRoads, 1, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
+                    hdotC = draw_point(h, xC,yC, 3); 
+                else
+                    set(handles.showWayBtn, 'Value', 1);
+                    set(handles.showWayBtn, 'String', 'Hide way');
+                    show_Map_Result(h, btnMap, btnRoads, 1, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
+                    hdotC = draw_point(h, xC,yC, 3);
+                    flag_point_C = 1;
+                end
+            end
+        end
+    end
+    
+    if get(handles.radiusBtn, 'Value') == 1
+        if flag_point_A == 1 
+            if flag_point_C == 1 
+                delete(hdotA);
+                delete(hdotC);
+                set(handles.showWayBtn, 'Value', 1);
+                show_Map_Result(h, btnMap, btnRoads, 1, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
+                hdotA = draw_point(h, xA,yA, 0);
+                hdotC = draw_point(h, xC,yC, 1);
+            else
+                delete(hdotA);
+                set(handles.showWayBtn, 'Value', 1);
+                show_Map_Result(h, btnMap, btnRoads, 1, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
+                hdotA = draw_point(h, xA,yA, 0); 
+                hdotC = draw_point(h, xC,yC, 1);
+                flag_point_C = 1;
+            end
+        else
+            if flag_point_C == 1
+                delete(hdotC);
+                set(handles.showWayBtn, 'Value', 1);
+                show_Map_Result(h, btnMap, btnRoads, 1, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
+                hdotC = draw_point(h, xC,yC, 1); 
+            else
+                set(handles.showWayBtn, 'Value', 1);
+                show_Map_Result(h, btnMap, btnRoads, 1, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
+                hdotC = draw_point(h, xC,yC, 1);
+                flag_point_C = 1;
+            end
+         end
+    end
+    
+    if get(handles.radiusBtn, 'Value') == 0 & get(handles.iteneraryBtn, 'Value') == 0
+        if get(handles.enterBtnA, 'Value') == 1 | get(handles.listBtnA, 'Value') == 1 | get(handles.mapBtnA, 'Value') == 1 | get(handles.enterBtnB, 'Value') == 1 | get(handles.listBtnB, 'Value') == 1 | get(handles.mapBtnB, 'Value') == 1
+            if flag_point_A == 1 
+                if flag_point_B == 1
                     delete(hdotA);
                     delete(hdotB);
                     show_Map_Result(h, btnMap, btnRoads, btnWay, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
                     hdotA = draw_point(h, xA,yA, 0);
                     hdotB = draw_point(h, xB,yB, 1);
-%                 end
-            else
-%                 if flg == 1 & flag_point_C == 1 
-%                     delete(hdotA);
-%                     delete(hdotC);
-%                     show_Map_Result(h, btnMap, btnRoads, btnWay, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
-%                     hdotA = draw_point(h, xA,yA, 0);
-%                     hdotC = draw_point(h, xC,yC, 3);  
-%                 else
+                else
                     delete(hdotA);
                     show_Map_Result(h, btnMap, btnRoads, btnWay, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
                     hdotA = draw_point(h, xA,yA, 0); 
-%                 end
-            end
-        else
-            if flag_point_B == 1
-%                 if flg == 1 & flag_point_C == 1 
-%                     delete(hdotB);
-%                     delete(hdotC);
-%                     show_Map_Result(h, btnMap, btnRoads, btnWay, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
-%                     hdotB = draw_point(h, xB,yB, 1);
-%                     hdotC = draw_point(h, xC,yC, 3); 
-%                 else
+                end
+            else
+                if flag_point_B == 1
                     delete(hdotB);
                     show_Map_Result(h, btnMap, btnRoads, btnWay, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
                     hdotB = draw_point(h, xB,yB, 1); 
-%                 end
-            else
-%                 if flg == 1 & flag_point_C == 1 
-%                     delete(hdotC);
-%                     show_Map_Result(h, btnMap, btnRoads, btnWay, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
-%                     hdotC = draw_point(h, xC,yC, 3); 
-%                 else
+                else
                     show_Map_Result(h, btnMap, btnRoads, btnWay, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
-%                 end
+                end
             end
         end
     end
-
+    
 else
     set(handles.showCategoryBtn,'String', 'Show category'); 
+    
     if get(handles.enterBtnA, 'Value') == 1 | get(handles.listBtnA, 'Value') == 1
         set(handles.showBtnA, 'Visible', 'off');
     end
     if get(handles.enterBtnB, 'Value') == 1 | get(handles.listBtnB, 'Value') == 1
         set(handles.showBtnB, 'Visible', 'off'); 
     end
-%     if strcmp(get(handles.panelC, 'Visible'), 'on') == 1
-%         flg = 1;
-%         if get(handles.enterBtnC, 'Value') == 1 | get(handles.listBtnC, 'Value') == 1
-%             set(handles.showBtnC, 'Visible', 'off');
-%         end
-%     else
-%         flg = 0;
-%     end
     
-    if get(handles.enterBtnA, 'Value') == 1 | get(handles.listBtnA, 'Value') == 1 | get(handles.mapBtnA, 'Value') == 1 | get(handles.enterBtnB, 'Value') == 1 | get(handles.listBtnB, 'Value') == 1 | get(handles.mapBtnB, 'Value') == 1
+    set(handles.infBtn, 'Visible', 'off'); 
+    
+    if get(handles.iteneraryBtn, 'Value') == 1
         if flag_point_A == 1 
             if flag_point_B == 1
-%                 if flg == 1 & flag_point_C == 1  
-%                     delete(hdotA);
-%                     delete(hdotB);
-%                     delete(hdotC);
-%                     show_Map_Result(h, btnMap, btnRoads, btnWay, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
-%                     hdotA = draw_point(h, xA,yA, 0);
-%                     hdotB = draw_point(h, xB,yB, 1);
-%                     hdotC = draw_point(h, xC,yC, 3);
-%                 else
+                if flag_point_C == 1  
+                    delete(hdotA);
+                    delete(hdotB);
+                    delete(hdotC);
+                    set(handles.showWayBtn, 'Value', 1);
+                    set(handles.showWayBtn, 'String', 'Hide way');
+                    show_Map_Result(h, btnMap, btnRoads, 1, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
+                    hdotA = draw_point(h, xA,yA, 0);
+                    hdotB = draw_point(h, xB,yB, 1);
+                    hdotC = draw_point(h, xC,yC, 3);
+                    flag_point_C = 1;
+                else
+                    delete(hdotA);
+                    delete(hdotB);
+                    set(handles.showWayBtn, 'Value', 1);
+                    set(handles.showWayBtn, 'String', 'Hide way');
+                    show_Map_Result(h, btnMap, btnRoads, 1, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
+                    hdotA = draw_point(h, xA,yA, 0);
+                    hdotB = draw_point(h, xB,yB, 1);
+                    hdotC = draw_point(h, xC,yC, 3);
+                    flag_point_C = 1;
+                end
+            else
+                if flag_point_C == 1 
+                    delete(hdotA);
+                    delete(hdotC);
+                    set(handles.showWayBtn, 'Value', 1);
+                    set(handles.showWayBtn, 'String', 'Hide way');
+                    show_Map_Result(h, btnMap, btnRoads, 1, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
+                    hdotA = draw_point(h, xA,yA, 0);
+                    hdotC = draw_point(h, xC,yC, 3);  
+                else
+                    delete(hdotA);
+                    set(handles.showWayBtn, 'Value', 1);
+                    set(handles.showWayBtn, 'String', 'Hide way');
+                    show_Map_Result(h, btnMap, btnRoads, 1, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
+                    hdotA = draw_point(h, xA,yA, 0); 
+                    hdotC = draw_point(h, xC,yC, 3);
+                    flag_point_C = 1;
+                end
+            end
+        else
+            if flag_point_B == 1
+                if flag_point_C == 1 
+                    delete(hdotB);
+                    delete(hdotC);
+                    set(handles.showWayBtn, 'Value', 1);
+                    set(handles.showWayBtn, 'String', 'Hide way');
+                    show_Map_Result(h, btnMap, btnRoads, 1, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
+                    hdotB = draw_point(h, xB,yB, 1);
+                    hdotC = draw_point(h, xC,yC, 3); 
+                else
+                    delete(hdotB);
+                    set(handles.showWayBtn, 'Value', 1);
+                    set(handles.showWayBtn, 'String', 'Hide way');
+                    show_Map_Result(h, btnMap, btnRoads, 1, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
+                    hdotB = draw_point(h, xB,yB, 1); 
+                    hdotC = draw_point(h, xC,yC, 3);
+                    flag_point_C = 1;
+                end
+            else
+                if flag_point_C == 1 
+                    delete(hdotC);
+                    set(handles.showWayBtn, 'Value', 1);
+                    set(handles.showWayBtn, 'String', 'Hide way');
+                    show_Map_Result(h, btnMap, btnRoads, 1, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
+                    hdotC = draw_point(h, xC,yC, 3); 
+                else
+                    set(handles.showWayBtn, 'Value', 1);
+                    set(handles.showWayBtn, 'String', 'Hide way');
+                    show_Map_Result(h, btnMap, btnRoads, 1, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
+                    hdotC = draw_point(h, xC,yC, 3);
+                    flag_point_C = 1;
+                end
+            end
+        end
+    end
+    
+    if get(handles.radiusBtn, 'Value') == 1
+        if flag_point_A == 1 
+            if flag_point_C == 1 
+                delete(hdotA);
+                delete(hdotC);
+                set(handles.showWayBtn, 'Value', 1);
+                show_Map_Result(h, btnMap, btnRoads, 1, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
+                hdotA = draw_point(h, xA,yA, 0);
+                hdotC = draw_point(h, xC,yC, 1);
+            else
+                delete(hdotA);
+                set(handles.showWayBtn, 'Value', 1);
+                show_Map_Result(h, btnMap, btnRoads, 1, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
+                hdotA = draw_point(h, xA,yA, 0); 
+                hdotC = draw_point(h, xC,yC, 1);
+                flag_point_C = 1;
+            end
+        else
+            if flag_point_C == 1
+                delete(hdotC);
+                set(handles.showWayBtn, 'Value', 1);
+                show_Map_Result(h, btnMap, btnRoads, 1, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
+                hdotC = draw_point(h, xC,yC, 1); 
+            else
+                set(handles.showWayBtn, 'Value', 1);
+                show_Map_Result(h, btnMap, btnRoads, 1, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
+                hdotC = draw_point(h, xC,yC, 1);
+                flag_point_C = 1;
+            end
+         end
+    end
+    
+    if get(handles.radiusBtn, 'Value') == 0 & get(handles.iteneraryBtn, 'Value') == 0
+        if get(handles.enterBtnA, 'Value') == 1 | get(handles.listBtnA, 'Value') == 1 | get(handles.mapBtnA, 'Value') == 1 | get(handles.enterBtnB, 'Value') == 1 | get(handles.listBtnB, 'Value') == 1 | get(handles.mapBtnB, 'Value') == 1
+            if flag_point_A == 1 
+                if flag_point_B == 1
                     delete(hdotA);
                     delete(hdotB);
                     show_Map_Result(h, btnMap, btnRoads, btnWay, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
                     hdotA = draw_point(h, xA,yA, 0);
                     hdotB = draw_point(h, xB,yB, 1);
-%                 end
-            else
-%                 if flg == 1 & flag_point_C == 1 
-%                     delete(hdotA);
-%                     delete(hdotC);
-%                     show_Map_Result(h, btnMap, btnRoads, btnWay, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
-%                     hdotA = draw_point(h, xA,yA, 0);
-%                     hdotC = draw_point(h, xC,yC, 3);  
-%                 else
+                else
                     delete(hdotA);
                     show_Map_Result(h, btnMap, btnRoads, btnWay, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
                     hdotA = draw_point(h, xA,yA, 0); 
-%                 end
-            end
-        else
-            if flag_point_B == 1
-%                 if flg == 1 & flag_point_C == 1 
-%                     delete(hdotB);
-%                     delete(hdotC);
-%                     show_Map_Result(h, btnMap, btnRoads, btnWay, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
-%                     hdotB = draw_point(h, xB,yB, 1);
-%                     hdotC = draw_point(h, xC,yC, 3); 
-%                 else
+                end
+            else
+                if flag_point_B == 1
                     delete(hdotB);
                     show_Map_Result(h, btnMap, btnRoads, btnWay, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
                     hdotB = draw_point(h, xB,yB, 1); 
-%                 end
-            else
-%                 if flg == 1 & flag_point_C == 1 
-%                     delete(hdotC);
-%                     show_Map_Result(h, btnMap, btnRoads, btnWay, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
-%                     hdotC = draw_point(h, xC,yC, 3); 
-%                 else
+                else
                     show_Map_Result(h, btnMap, btnRoads, btnWay, btnCategory, route,  points, parsed_osm, parsed_poi, map_img_filename);
-%                 end
+                end
             end
         end
     end
+    
 end
 
 
@@ -3917,23 +4381,25 @@ global xA;
 global yA;
 global xB;
 global yB;
-global xC;
-global yC;
 global hdotA;
 global hdotB;
-global hdotC;
 global flag_point_A;
 global flag_point_B;
-global flag_point_C;
+
 global resultA;
 global resultB;
-global resultC;
+global valueA;
+global categoryA;
+global poiA;
+global valueB;
+global categoryB;
+global poiB;
+global cat;
+
 xACorrect = 0;
 yACorrect = 0;
 xBCorrect = 0;
 yBCorrect = 0;
-xCCorrect = 0;
-yCCorrect = 0;
 
 if (get(handles.showBtnA,'Value') == 1)
     pos = get(handles.mapDraw, 'currentpoint');% get mouse location on figure
@@ -3966,6 +4432,7 @@ if (get(handles.showBtnA,'Value') == 1)
             if (get(handles.enterBtnA, 'Value') == 1)
                 if resultA.id ~= 0
                     set(handles.userEnterA, 'String', resultA.name);
+                    valueA = resultA.name;
                     set(handles.showBtnA,'Value', 0);
                     showBtnA_Callback(hObject, eventdata, handles);
                     if flag_point_A == 0
@@ -3986,6 +4453,7 @@ if (get(handles.showBtnA,'Value') == 1)
                 if resultA.id ~= 0
                    set(handles.categoryMenuA, 'Value', (resultA.cat_id+1));
                     set(handles.poiMenuA,'Value', 1);
+                    categoryA = resultA.cat_id+1;
                     poi_name = get_names_poi_by_category_id( parsed_poi,resultA.cat_id);
                     set(handles.poiMenuA, 'String', poi_name);
                     for i = 1:1:size(poi_name)
@@ -3993,6 +4461,7 @@ if (get(handles.showBtnA,'Value') == 1)
                             num = i;
                         end
                     end 
+                    poiA = num;
                     set(handles.poiMenuA, 'Value', num);
                     set(handles.showBtnA,'Value', 0);
                     showBtnA_Callback(hObject, eventdata, handles);
@@ -4062,6 +4531,7 @@ if (get(handles.showBtnB,'Value') == 1)
             if (get(handles.enterBtnB, 'Value') == 1)
                 if resultB.id ~= 0
                     set(handles.userEnterB, 'String', resultB.name);
+                    valueB = resultB.name;
                     set(handles.showBtnB,'Value', 0);
                     showBtnB_Callback(hObject, eventdata, handles);
                     if flag_point_B == 0
@@ -4081,6 +4551,7 @@ if (get(handles.showBtnB,'Value') == 1)
             if (get(handles.listBtnB, 'Value') == 1)
                 if resultB.id ~= 0
                    set(handles.categoryMenuB, 'Value', (resultB.cat_id+1));
+                   categoryB = resultB.cat_id+1;
                     set(handles.poiMenuB,'Value', 1);
                     poi_name = get_names_poi_by_category_id( parsed_poi,resultB.cat_id);
                     set(handles.poiMenuB, 'String', poi_name);
@@ -4089,6 +4560,7 @@ if (get(handles.showBtnB,'Value') == 1)
                             num = i;
                         end
                     end 
+                    poiB = num;
                     set(handles.poiMenuB, 'Value', num);
                     set(handles.showBtnB,'Value', 0);
                     showBtnA_Callback(hObject, eventdata, handles);
@@ -4126,105 +4598,47 @@ if (get(handles.showBtnB,'Value') == 1)
 end
 
 
-% 
-% if (get(handles.showBtnC,'Value') == 1)
-%     pos = get(handles.mapDraw, 'currentpoint');% get mouse location on figure
-%     xC = pos(1, 1)
-%     yC = pos(1, 2)
-%     
-%     if 4.40 < xC & xC < 4.46
-%         xCCorrect = 1;
-%     else
-%         xCCorrect = 0;
-%         xC = 0;
-%         yC = 0;
-%         set(handles.showBtnC,'Value', 0);
-%         warn(23);
-%     end
-%     if 46.721 < yC & yC < 46.817
-%         yCCorrect = 1;
-%     else
-%         yCCorrect = 0;
-%         xC = 0;
-%         yC = 0;
-%         set(handles.showBtnC,'Value', 0);
-%         warn(24);
-%     end
-%     if xCCorrect == 1 & yCCorrect == 1
-%         resultC = get_poi_by_coordinates(parsed_poi, xC, yC)
-%         set(handles.showBtnC,'Value', 0);
-% 
-%         if (get(handles.showCategoryBtn,'Value') == 1)
-%             if (get(handles.enterBtnC, 'Value') == 1)
-%                 if resultC.id ~= 0
-%                     set(handles.userEnterC, 'String', resultC.name);
-%                     set(handles.showBtnC,'Value', 0);
-%                     showBtnC_Callback(hObject, eventdata, handles);
-%                     if flag_point_C == 0
-%                         hdotC = draw_point(h, xC, yC, 3);
-%                         flag_point_C = 1;
-%                     else
-%                         delete(hdotC)
-%                         hdotC = draw_point(h, xA, yA, 3);
-%                         flag_point_C = 1;
-%                     end
-%                 else
-%                     xC = 0;
-%                     yC = 0;
-%                 end
-%             end
-% 
-%             if (get(handles.listBtnC, 'Value') == 1)
-%                 if resultC.id ~= 0
-%                    set(handles.categoryMenuC, 'Value', (resultC.cat_id+1));
-%                     set(handles.poiMenuC,'Value', 1);
-%                     poi_name = get_names_poi_by_category_id( parsed_poi,resultC.cat_id);
-%                     set(handles.poiMenuC, 'String', poi_name);
-%                     for i = 1:1:size(poi_name)
-%                         if strcmp(poi_name(i),resultC.name) == 1
-%                             num = i;
-%                         end
-%                     end 
-%                     set(handles.poiMenuC, 'Value', num);
-%                     set(handles.showBtnC,'Value', 0);
-%                     showBtnA_Callback(hObject, eventdata, handles);
-%                     if flag_point_C == 0
-%                         hdotC = draw_point(h, xC, yC, 3);
-%                         flag_point_C = 1;
-%                     else
-%                         delete(hdotC)
-%                         hdotC = draw_point(h, xC, yC, 3);
-%                         flag_point_C = 1;
-%                     end
-%                 else
-%                     xC = 0;
-%                     yC = 0;
-%                     set(handles.categoryMenuC, 'Value', 1);
-%                     categoryMenuC_Callback(hObject, eventdata, handles);
-%                     set(handles.poiMenuC,'Value', 1);
-%                 end
-%             end
-% 
-%             if (get(handles.mapBtnC, 'Value') == 1)
-%                 if resultC.id ~= 0
-%                     showBtnC_Callback(hObject, eventdata, handles);
-%                 else
-%                     xC = 0;
-%                     yC = 0;
-%                 end  
-%             end
-%         else
-%             if (get(handles.mapBtnC, 'Value') == 1)
-%                 showBtnC_Callback(hObject, eventdata, handles);
-%             else
-%                 if flag_point_C == 1
-%                     delete(hdotC)
-%                     flag_point_C = 0;
-%                 end
-%             end
-%         end
-%     end
-% end
+if (get(handles.infBtn,'Value') == 1)
+    pos = get(handles.mapDraw, 'currentpoint');% get mouse location on figure
+    xI = pos(1, 1)
+    yI = pos(1, 2)
+    
+    if 4.40 < xI & xI < 4.46
+        xICorrect = 1;
+    else
+        xICorrect = 0;
+        xI = 0;
+        yI = 0;
+        warn(23);
+    end
+    if 46.721 < yI & yI < 46.817
+        yICorrect = 1;
+    else
+        yICorrect = 0;
+        xI = 0;
+        yI = 0;
+        warn(24);
+    end
+    if xICorrect == 1 & yICorrect == 1
+        resultI = get_poi_by_coordinates(parsed_poi, xI, yI)
+        if resultI.id ~= 0
+            st1 = strcat('Name: ', resultI.name);
+            st2 = strcat('Address: ', resultI.address);
+            strI1 = strvcat('Point information', st1, st2);
+            set(handles.tInstrOne, 'String', strI1);
+            
+            st4 = strcat('X: ', num2str(resultI.xy(2)));
+            st5 = strcat('Y: ', num2str(resultI.xy(1)));
+            strI2 = strvcat(st4, st5);
+            set(handles.tInstrTwo, 'String', strI2);
+            set(handles.tInstrThree, 'String', '');
+            set(handles.tInstrFour, 'String', '');
+        end  
+    end
+    set(handles.infBtn,'Value',0);
+end
+
+
 
 
 % --- Executes during object creation, after setting all properties.
@@ -4302,17 +4716,18 @@ if (get(handles.iteneraryBtn,'Value') == 1)
     set(handles.categoryMenuC,'Value', 1);
     set(handles.categoryMenuC,'String',cat);
     categoryC = 1;
-    flag_point_C = 0;
     if flag_point_C == 1
         delete(hdotC);
         flag_point_C = 0;
+        xC = 0;
+        yC = 0;
     end
 else
     set(handles.radiusSearch, 'Visible', 'off'); 
     if strcmp(get(handles.panelC, 'Visible'), 'on') == 1
         set(handles.panelC, 'Visible', 'off');
     end      
-    set(handles.swapBtn, 'Visible', 'on');
+
     set(handles.maxDistance, 'Visible', 'off');
     if flag_point_C == 1
         delete(hdotC);
@@ -4337,3 +4752,12 @@ function mapBtnA_ButtonDownFcn(hObject, eventdata, handles)
 % hObject    handle to mapBtnA (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+
+
+% --- Executes on button press in infBtn.
+function infBtn_Callback(hObject, eventdata, handles)
+% hObject    handle to infBtn (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of infBtn
