@@ -623,13 +623,14 @@ if get(handles.radiusBtn, 'Value') == 0
                                 strB = strvcat('End point', st1, st2);
                                 set(handles.tInstrTwo, 'String', strB);
                             end
+                            dist = calc_distance_route(route);
                             if transport == 1
                                 st1 = 'Go by car';
+                                time = num2str(dist);
                             end
                             if transport == 2
                                 st1 = 'Go by foot';
                             end
-                            dist = calc_distance_route(route);
                             st2 = strcat('Route distance: ', num2str(dist), ' km');
                             str = strvcat(st1, st2, 'Have a nice trip!');
                             set(handles.tInstrThree, 'String', str);
@@ -898,6 +899,10 @@ if get(handles.radiusBtn, 'Value') == 0
                             warn(27);
                         end
                     else
+                          if flag_point_C == 1
+                                delete(hdotC);
+                                flag_point_C == 0;
+                            end
                         if flag_point_A == 1 
                             if flag_point_B == 1
 %                                 if flag_point_C == 1  
@@ -942,10 +947,6 @@ if get(handles.radiusBtn, 'Value') == 0
 %                                 end
                             end
                         else
-                            if flag_point_C == 1
-                                delete(hdotC);
-                                flag_point_C == 0;
-                            end
                             if flag_point_B == 1
 %                                 if flag_point_C == 1 
 %                                     delete(hdotB);
